@@ -1,0 +1,82 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: flex-start;
+    color: white;
+    font-size: larger;
+    font-family: Inconsolata;
+    padding: 30px;
+    background-image: url('https://e1.pxfuel.com/desktop-wallpaper/338/903/desktop-wallpaper-attack-on-titan-logo-posted-by-john-sellers-attack-on-titan-symbol.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.character-card {
+    text-align: center;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    width: 200px;
+    transition: transform 0.3s ease;
+}
+
+.character-card:hover {
+    transform: scale(1.05);
+}
+
+.character-card img {
+    border-radius: 4px;
+    width: 100%;
+    height: auto;
+}
+
+.character-info {
+    margin-top: 10px;
+}
+
+.pagination {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.page-number {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    color:white;
+}
+
+.page-number.active {
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+}
+
+.page-arrow {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+
+}
+
+.page-arrow.disabled {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.page-arrow :hover{
+    background-color: black;
+    color: white;
+}
+.pagination-footer {
+    background-color:#2d3436;
+    padding: 10px;
+    text-align: center;
+}

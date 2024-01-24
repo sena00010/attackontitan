@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Merienda:wght@500;800&display=swap');
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: gray;
+    overflow: hidden; /* Ensure that content exceeding container width is hidden */
+}
+
+.erenYeager {
+    font-family: 'Merienda', cursive;
+    padding: 30px;
+    color: #c4c46a;
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
+    overflow: hidden; /* Hide the overflowing content */
+    animation: scrollText 20s linear infinite; /* Adjust the duration as needed */
+}
+
+@keyframes scrollText {
+    from {
+        transform: translateX(100%); /* Start the text off-screen to the right */
+    }
+    to {
+        transform: translateX(-100%); /* Move the text off-screen to the left */
+    }
+}

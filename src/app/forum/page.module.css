@@ -1,0 +1,25 @@
+.container{
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: linear-gradient(to bottom, rgba(0, 51, 153, 0.42), #ffffff);
+}
+.secondPart{
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-image: url('https://wallpapercave.com/wp/wp5600434.jpg');
+    background-repeat:no-repeat;
+    background-size: cover;
+}
+.firstPart{
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-image: url('https://wallpapercave.com/wp/wp5600434.jpg');
+    background-repeat:no-repeat;
+    background-size: cover;
+    padding: 40px 40px;
+}
