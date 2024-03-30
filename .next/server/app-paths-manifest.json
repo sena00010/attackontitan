@@ -1,6 +1,4 @@
 {
-  "/forum/page": "app/forum/page.js",
-  "/register/page": "app/register/page.js",
-  "/page": "app/page.js",
-  "/login/page": "app/login/page.js"
+  "/cartPage/page": "app/cartPage/page.js",
+  "/page": "app/page.js"
 }

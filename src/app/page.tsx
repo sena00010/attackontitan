@@ -1,7 +1,6 @@
-import Image from "next/image";
 import styles from "./page.module.css";
-import HeaderComp from "../component/topic";
 import TitleComp from "@/component/title";
+import Character from "../component/topic";
 
 export default function Home() {
   return (
@@ -13,7 +12,7 @@ export default function Home() {
         </div>
       </div>
       <TitleComp />
-      <HeaderComp />
+      <Character/>
     </div>
   );
 }
