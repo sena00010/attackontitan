@@ -6,19 +6,16 @@ import styles from "./header.module.css";
 import CharacterDetails from "@/component/characterDetails";
 import { useAtom } from 'jotai';
 import {cartAtoms} from "@/atoms/cartAtoms";
-
 interface Character {
   id: number;
   img: string;
   name: string;
   birthplace: string;
 }
-
 interface Results {
   info: [];
   results: Character[];
 }
-
 export default function Character() {
   const [data, setData] = useState<Character[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -49,7 +46,6 @@ export default function Character() {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
   }, [currentPage]);
 
@@ -61,8 +57,7 @@ export default function Character() {
         {filteredData?.map((item: Character, index: number) => (
           <div key={index} className={styles["character-card"]} onClick={() => {
             setOpenDetails(!openDetails)
-            console.log(products,'productsssssssssssssss')
-
+            console.log(products,'products')
             // item?.id===index+1 && setSelectedChar(item)
             // console.log(selectedChar,'selectedChar')
             // console.log(index,'index')

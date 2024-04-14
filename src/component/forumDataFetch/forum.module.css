@@ -1,0 +1,40 @@
+.main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to bottom, #d3c7fe, #9687bb);    background-repeat:no-repeat;
+    background-size: contain;
+}
+.container {
+    margin: 50px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    width: 80%;
+    /*box-shadow: 0 0 30px rgba(107, 96, 96, 0.41);*/
+
+}
+.postContainer{
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 40px 40px;
+    width: 80%;
+    background-color: white;
+}
+.header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color:blueviolet;
+}
+.bottomReaction{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.rightReaction{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
