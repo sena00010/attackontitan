@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(to bottom, #d3c7fe, #9687bb);    background-repeat:no-repeat;
+    /*background: linear-gradient(to bottom, #d3c7fe, #9687bb);    background-repeat:no-repeat;*/
     background-size: contain;
 }
 .container {

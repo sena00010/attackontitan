@@ -1,7 +1,10 @@
 /*!*************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[3]!./src/app/forum/page.module.css ***!
   \*************************************************************************************************************************************************************************************************************************************************************************/
-
+.page_container__FyR_C{
+    height: 100vh;
+    background-color: blue;
+}
 /*!*****************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[11].oneOf[12].use[3]!./src/app/globals.css ***!
   \*****************************************************************************************************************************************************************************************************************************************************************/
@@ -212,12 +215,18 @@ body{
 /*!******************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[11].oneOf[7].use[3]!./src/component/createPost/createPost.module.css ***!
   \******************************************************************************************************************************************************************************************************************************************************************************************/
+.createPost_mainContainer__d4qNb {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ff4d4f;
+}
 .createPost_container__9mfHv {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color:gray;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -241,7 +250,7 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(to bottom, #d3c7fe, #9687bb);    background-repeat:no-repeat;
+    /*background: linear-gradient(to bottom, #d3c7fe, #9687bb);    background-repeat:no-repeat;*/
     background-size: contain;
 }
 .forum_container__cnROC {
