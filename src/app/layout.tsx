@@ -1,6 +1,8 @@
 import { Inter } from "next/font/google";
 import { initializeApp } from "firebase/app";
 import "./globals.css";
+import {getFirestore} from "@firebase/firestore";
+import {MantineProvider} from "@mantine/core";
 const inter = Inter({ subsets: ["latin"] });
 
 
@@ -11,16 +13,18 @@ const inter = Inter({ subsets: ["latin"] });
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDAbxilN0o-2OPUQh8VbCDR8oDeeAMysAg",
-  authDomain: "attack-on-titan-fe0b2.firebaseapp.com",
-  projectId: "attack-on-titan-fe0b2",
-  storageBucket: "attack-on-titan-fe0b2.appspot.com",
-  messagingSenderId: "285398761943",
-  appId: "1:285398761943:web:c154534c5dbef513154b92"
+  apiKey: "AIzaSyBrCP4cdAO3iugcXw_3tC-P7Tc6ejaHcn4",
+  authDomain: "animepression.firebaseapp.com",
+  databaseURL: "https://animepression-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "animepression",
+  storageBucket: "animepression.appspot.com",
+  messagingSenderId: "443513559646",
+  appId: "1:443513559646:web:b9876ea8b060b6aa82b2cf",
+  measurementId: "G-Z2X190YYL9"
 };
-
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig)
+console.log(app,"firebase")
 export { app };
 export default function RootLayout({
   children,
@@ -29,7 +33,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+    <MantineProvider
+    >
       <body className={inter.className}>{children}</body>
+
+    </MantineProvider>
     </html>
   );
 }
+// async function getCities(db) {
+//   const citiesCol = collection(db, 'cities');
+//   const citySnapshot = await getDocs(citiesCol);
+//   const cityList = citySnapshot.docs.map(doc => doc.data());
+//   return cityList;
+// }

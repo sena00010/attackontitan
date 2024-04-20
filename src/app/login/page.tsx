@@ -34,7 +34,11 @@ export default function LoginPage() {
         const errorMessage = error.message;
         console.log(errorCode, errorMessage);
         console.log(formData.email, formData.password);
-        // ..
+        if(errorMessage==='Firebase: Error (auth/invalid-credential).'){
+          alert('GEÇERSİZ BIR E-MAİL VEYA SİFRE')
+        }else{
+          alert(errorMessage)
+        }        // ..
       });
   };
   return (

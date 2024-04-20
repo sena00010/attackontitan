@@ -1,7 +1,4 @@
 {
   "/page": "app/page.js",
-  "/cartPage/page": "app/cartPage/page.js",
-  "/login/page": "app/login/page.js",
-  "/register/page": "app/register/page.js",
   "/forum/page": "app/forum/page.js"
 }

@@ -4,7 +4,17 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
-                hostname:  "static.wikia.nocookie.net" ,
+                hostname:  "static.wikia.nocookie.net",
+                port: '',
+            },
+            {
+                protocol: 'https',
+                hostname:  "tinyjpg.com",
+                port: '',
+            },
+            {
+                protocol: 'https',
+                hostname:  "images.rawpixel.com",
                 port: '',
             },
         ],

@@ -1,0 +1,38 @@
+.commentContainer{
+    display: flex;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.commentArea{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+;
+}
+.textArea{
+    display: flex;
+    flex: 1;
+}
+.commentButton{
+    background-color: #9687bb;
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    border-color:#9687bb ;
+}
+.commentButton:hover{
+    background-color: #493b6b;
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-color:#9687bb ;
+}

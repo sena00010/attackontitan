@@ -19,10 +19,9 @@ export default function RegisterPage() {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    createUserWithEmailAndPassword(auth, formData.email, formData.password)
+    createUserWithEmailAndPassword(auth, formData.email, formData.password,)
       .then((userCredential) => {
         // Signed up 
         const user = userCredential.user;
@@ -31,9 +30,15 @@ export default function RegisterPage() {
         // ...
       })
       .catch((error) => {
+        console.log(formData,'formData')
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
+        console.log('errorMessage',errorMessage);
+        if(errorMessage==='Firebase: Error (auth/email-already-in-use).'){
+          alert('Bu mail zaten var')
+        }else{
+          alert(errorMessage)
+        }
         // ..
       });
   };
@@ -51,7 +56,7 @@ export default function RegisterPage() {
                 />
               </div>
               <h1 className={styles.title}>Register!</h1>
-              <form className={styles.formıtems} onSubmit={handleSubmit}>
+              <form className={styles.formıtems} >
                 <input
                   type="text"
                   className={styles.input}
@@ -85,7 +90,7 @@ export default function RegisterPage() {
                   onChange={handleChange}
                 />
                 <div className={styles.buttonContainer}>
-                  <button className={styles.button} type="submit">
+                  <button className={styles.button} onClick={handleSubmit} type="submit">
                     Hesap Oluştur!
                   </button>
                 </div>

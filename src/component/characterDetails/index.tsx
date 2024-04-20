@@ -33,4 +33,3 @@ export default function CharacterDetails({opened,data,setClosed}:Character ){
         )
 )
 }
-//close işleminde opendın false oluşunu sağlicam
