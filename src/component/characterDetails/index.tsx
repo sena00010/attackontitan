@@ -11,7 +11,6 @@ data:any;
 setClosed:React.Dispatch<React.SetStateAction<boolean>>
 }
 export default function CharacterDetails({opened,data,setClosed}:Character ){
-    console.log(data,'dataaaacıkka')
     return (
         opened && (<div className={styles.container}>
              <div className={styles.closeButton}>

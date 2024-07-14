@@ -25,7 +25,6 @@ export default function LoginPage() {
       .then((userCredential) => {
         // Signed up 
         const user = userCredential.user;
-        console.log(user);
         router.push('/');
         // ...
       })

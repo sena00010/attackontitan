@@ -23,7 +23,6 @@ const firebaseConfig = {
 };
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-console.log(app, "firebase");
 export { app };
 
 export default function RootLayout({

@@ -7,7 +7,6 @@ import styles from "./userData.module.css";
 
 const UserData = ({ userId }: { userId: string }) => {
   const [userData, setUserData] = useState<any>(null);
-  console.log(userData,"userDataa")
   const db = getFirestore(app);
 
   useEffect(() => {
@@ -35,7 +34,7 @@ const UserData = ({ userId }: { userId: string }) => {
           <div><img  className={styles.topPhoto} src={userData.userProfilePictures} width={100} height={100} /></div>
         </div>
       ) : (
-        <div>Loading...</div>
+        <div></div>
       )}
     </div>
   );

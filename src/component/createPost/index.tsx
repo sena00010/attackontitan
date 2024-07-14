@@ -1,22 +1,16 @@
+"use client"
+import React, { useState } from "react";
 import styles from "./createPost.module.css";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { CloseButton, Modal, Textarea, Box, Image } from "@mantine/core";
+import { CloseButton, Textarea, Box, Image } from "@mantine/core";
 import { Formik } from "formik";
 import { notifications } from "@mantine/notifications";
 import "@mantine/dropzone/styles.css";
-import React, { useState } from "react";
-import {
-  Dropzone,
-  DropzoneProps,
-  FileWithPath,
-  IMAGE_MIME_TYPE,
-} from "@mantine/dropzone";
+import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAdd,
-  faCamera,
-  faSquareXmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCamera, faSquareXmark } from "@fortawesome/free-solid-svg-icons";
+import { collection, addDoc, Timestamp, getFirestore } from "firebase/firestore";
+import { app } from "@/app/layout";
 
 interface Character {
   opened: boolean;
@@ -24,21 +18,46 @@ interface Character {
   setClosed: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-interface ExtendedFileWithPath extends FileWithPath {
+interface ExtendedFileWithPath extends File {
   url?: string;
 }
 
-export default function PostCreated({
-  opened,
-  setClosed,
-  submitFunc,
-}: Character) {
-  const [uploadedImages, setUploadedImages] = useState<ExtendedFileWithPath[]>(
-    []
-  );
-  const [uploadedFiles, setUploadedFiles] = useState<ExtendedFileWithPath[]>(
-    []
-  );
+export default function PostCreated({ opened, setClosed, submitFunc }: Character) {
+  const [uploadedImages, setUploadedImages] = useState<ExtendedFileWithPath[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<ExtendedFileWithPath[]>([]);
+  
+  const db = getFirestore(app);
+
+  const handleFormSubmit = async (values:any, uploadedImages:any) => {
+    try {
+      const postData = {
+        postContent: {
+          text: values.postContent,
+          images: uploadedImages.map(file => URL.createObjectURL(file))
+        },
+        timeStamp: Timestamp.now(),
+      };
+
+      await addDoc(collection(db, "post"), postData);
+
+      notifications.update({
+        id: "submitting-form",
+        color: "teal",
+        title: "Başarılı!",
+        message: "Post başarıyla oluşturuldu.",
+        autoClose: 5000,
+      });
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      notifications.update({
+        id: "submitting-form",
+        color: "red",
+        title: "Hata!",
+        message: "Post oluşturulurken bir hata meydana geldi.",
+        autoClose: 5000,
+      });
+    }
+  };
 
   return (
     opened && (
@@ -60,16 +79,17 @@ export default function PostCreated({
               id: "submitting-form",
               loading: true,
               message:
-                "Dosyalarınızda güvenlik taraması yapılıyor. Verilerin boyutlarına göre işlem süresi uzun olabilir. Lütfen bekleyiniz... ",
+                "Dosyalarınızda güvenlik taraması yapılıyor. Verilerin boyutlarına göre işlem süresi uzun olabilir. Lütfen bekleyiniz...",
               autoClose: false,
               withCloseButton: false,
             });
-            await submitFunc(values, uploadedImages, uploadedFiles);
+            await handleFormSubmit(values, uploadedImages);
             setSubmitting(false);
             setUploadedImages([]);
+            setClosed(false);
           }}
         >
-          {({ handleSubmit, touched, handleChange, values, errors }) => (
+          {({ handleSubmit, handleChange, values }) => (
             <form onSubmit={handleSubmit} className={styles.form}>
               <div style={{ width: "90%" }}>
                 <div
@@ -194,7 +214,6 @@ export default function PostCreated({
                 value={values.postContent}
                 label="Paylaşmak istediğiniz metni yazınız"
                 required
-                error={touched.postContent && errors.postContent}
               />
               <div className={styles.buttonContainer}>
                 <button className={styles.submitButton} type="submit">

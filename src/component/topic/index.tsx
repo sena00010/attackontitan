@@ -57,7 +57,6 @@ export default function Character() {
         {filteredData?.map((item: Character, index: number) => (
           <div key={index} className={styles["character-card"]} onClick={() => {
             setOpenDetails(!openDetails)
-            console.log(products,'products')
             // item?.id===index+1 && setSelectedChar(item)
             // console.log(selectedChar,'selectedChar')
             // console.log(index,'index')

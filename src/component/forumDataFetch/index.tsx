@@ -2,11 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./forum.module.css";
-import {
-  faComment,
-  faHashtag,
-  faHeart,
-} from "@fortawesome/free-solid-svg-icons";
+import { faComment, faHashtag, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import ForumComment from "@/component/forumCommentData";
@@ -21,22 +17,21 @@ export default function ForumDataFetch() {
   const [openComments, setOpenComments] = useState(false);
   const [openPost, setOpenPost] = useState(false);
 
-  useEffect(() => {
-    fetchData();
-    console.log(data, "data");
-  }, []);
-
   const fetchData = async () => {
     try {
       const postsCol = collection(db, "post");
       const postSnapshot = await getDocs(postsCol);
-      const postList = postSnapshot.docs.map((doc) => doc.data());
-      console.log(postList, "postList");
+      const postList = postSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setData(postList ?? []);
+      console.log(postList, "postList");
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className={styles.main}>
@@ -47,23 +42,32 @@ export default function ForumDataFetch() {
           submitFunc={() => {}}
         />
         {data.map((item: any) => (
-          <div className={styles.post} key={item.userId}>
+          <div className={styles.post} key={item.id}>
             <div className={styles.userData}>
               <UserData userId={item.userId} />
             </div>
             <div className={styles.postContent}>
-              <div>{item.postContent.text}</div>
-              <div>
-                {" "}
-                <img
-                  src={item.postContent.image}
-                  alt={item.postContent.image}
-                  className={styles.postImage}
-                />
-              </div>
+              <div>{item.postContent?.text}</div>
+              {item.postContent?.image && (
+                <div>
+                  <img
+                    src={item.postContent.image}
+                    alt={item.postContent.image}
+                    className={styles.postImage}
+                  />
+                </div>
+              )}
             </div>
           </div>
         ))}
+      </div>
+      <div>
+        <button
+          onClick={() => setOpenPost(!openPost)}
+          className={styles.postImage}
+        >
+          oluştur
+        </button>
       </div>
     </div>
   );
