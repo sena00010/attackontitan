@@ -13,14 +13,19 @@ import ForumComment from "@/component/forumCommentData";
 import PostCreated from "@/component/createPost";
 import { collection, getDocs, getFirestore } from "@firebase/firestore";
 import { app } from "@/app/layout";
+import UserData from "./userData";
+
 export default function ForumDataFetch() {
   const [data, setData] = useState<any>([]);
   const db = getFirestore(app);
   const [openComments, setOpenComments] = useState(false);
   const [openPost, setOpenPost] = useState(false);
+
   useEffect(() => {
     fetchData();
+    console.log(data, "data");
   }, []);
+
   const fetchData = async () => {
     try {
       const postsCol = collection(db, "post");
@@ -32,9 +37,7 @@ export default function ForumDataFetch() {
       console.error("Error fetching data:", error);
     }
   };
-  // const toggleComments = (postId: number) => {
-  //     setOpenComments(prevState => openComments: !prevState);
-  // }
+
   return (
     <div className={styles.main}>
       <div className={styles.container}>
@@ -44,47 +47,23 @@ export default function ForumDataFetch() {
           submitFunc={() => {}}
         />
         {data.map((item: any) => (
-          <div key={item.id} className={styles.postContainer}>
-            <div className={styles.header}>
-              <Image
-                src={item.post.postImage[0]}
-                style={{ borderRadius: "100%" }}
-                width={50}
-                height={50}
-                alt={item.post.postImage[0]}
-              />
-              <div>userName</div>
+          <div className={styles.post} key={item.userId}>
+            <div className={styles.userData}>
+              <UserData userId={item.userId} />
             </div>
-            <div> {item.post.postContent}</div>
-            <div>
-              <Image
-                src={item.post.postImage[1]}
-                width={300}
-                height={300}
-                alt={item.post.postImage[1]}
-              />
-            </div>
-            <div className={styles.bottomReaction}>
-              <div className={styles.rightReaction}>
-                <div>
-                  <FontAwesomeIcon color="red" icon={faHeart} />
-                  {item.reactions}
-                </div>
-              </div>
-              <div onClick={() => setOpenComments(!openComments)}>
-                <FontAwesomeIcon
-                  color={"purple"}
-                  size={"xl"}
-                  icon={faComment}
+            <div className={styles.postContent}>
+              <div>{item.postContent.text}</div>
+              <div>
+                {" "}
+                <img
+                  src={item.postContent.image}
+                  alt={item.postContent.image}
+                  className={styles.postImage}
                 />
               </div>
             </div>
-            {<ForumComment opened={!openComments} />}
           </div>
         ))}
-      </div>
-      <div>
-        <button onClick={() => setOpenPost(!openPost)}>Gönderi Oluştur</button>
       </div>
     </div>
   );

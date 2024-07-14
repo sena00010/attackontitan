@@ -1,0 +1,9 @@
+.topInfo{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.topPhoto{
+    border-radius: 100%;
+}
