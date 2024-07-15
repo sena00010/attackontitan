@@ -17,6 +17,11 @@ const nextConfig = {
                 hostname:  "images.rawpixel.com",
                 port: '',
             },
+            {
+                protocol: 'https',
+                hostname:  "firebasestorage.googleapis.com",
+                port: '',
+            },
         ],
     },
 
