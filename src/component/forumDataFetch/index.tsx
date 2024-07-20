@@ -14,6 +14,7 @@ import PostCreated from "@/component/createPost";
 import { collection, getDocs, getFirestore } from "@firebase/firestore";
 import { app } from "@/app/layout";
 import UserData from "./userData";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 export default function ForumDataFetch() {
   const [data, setData] = useState<any>([]);
@@ -26,7 +27,10 @@ export default function ForumDataFetch() {
     try {
       const postsCol = collection(db, "post");
       const postSnapshot = await getDocs(postsCol);
-      const postList = postSnapshot.docs.map((doc) => doc.data());
+      const postList = postSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
       setData(postList ?? []);
       console.log(postList,"postList")
     } catch (error) {
@@ -45,24 +49,44 @@ export default function ForumDataFetch() {
         <PostCreated
           opened={openPost}
         />
-        {data.map((item: any) => (
-          <div className={styles.post} key={item.userId}>
-            <div className={styles.userData}>
-              <UserData userId={item.userId} />
-            </div>
-            <div className={styles.postContent}>
-              <div>{item.postContent.text}</div>
-              <div>
-                {" "}
-                <img
-                  src={item.postContent.image}
-                  alt={item.postContent.image}
-                  className={styles.postImage}
-                />
+        {data.map((item: any) => {
+          return (
+            <div className={styles.post} key={item.id}>
+              <div className={styles.userData}>
+                <UserData userId={item.userId} />
+              </div>
+              <div className={styles.postContent}>
+                <div>{item.postContent?.text}</div>
+                {item.postContent?.images && (
+                  <div>
+                    <Swiper
+                      navigation
+                      spaceBetween={10}
+                      slidesPerView={2}
+                      grabCursor={true}
+                      pagination={{ clickable: true }}
+                    >
+                      {item.postContent.images?.map(
+                        (postImage: any, index: any) => {
+                          return (
+                            <SwiperSlide key={index}>
+                              <Image
+                                src={postImage}
+                                alt={`Post image ${index + 1}`}
+                                width={110}
+                                height={140}
+                              />
+                            </SwiperSlide>
+                          );
+                        }
+                      )}
+                    </Swiper>
+                  </div>
+                )}
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       <div> 
              <button onClick={()=>setOpenPost(!openPost)} className={styles.postImage}
