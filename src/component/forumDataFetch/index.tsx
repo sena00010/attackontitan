@@ -1,22 +1,16 @@
-"use client"
+"use client";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import styles from "./forum.module.css";
-import {
-  faComment,
-  faHashtag,
-  faHeart,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Image from "next/image";
 import PostCreated from "@/component/createPost";
 import { collection, getDocs, getFirestore } from "@firebase/firestore";
 import { app } from "@/app/layout";
 import UserData from "./userData";
-import { Swiper, SwiperSlide } from "swiper/react";
+import DeletePost from "../deletePost"; // Fonksiyonu içe aktar
 
 export default function ForumDataFetch() {
-  const [data, setData] = useState<any>([]);
+  const [data, setData] = useState<any[]>([]);
   const db = getFirestore(app);
   const [openPost, setOpenPost] = useState(false);
 
@@ -38,23 +32,31 @@ export default function ForumDataFetch() {
     fetchData();
   }, []);
 
-  console.log(data,"data")
+  const handleDelete = async (postId: string) => {
+    await DeletePost(postId, fetchData);
+  };
 
   return (
     <div className={styles.main}>
       <div className={styles.container}>
-        <PostCreated
-          opened={openPost}
-          setOpenPost={setOpenPost}
-        />
+        <PostCreated opened={openPost} setOpenPost={setOpenPost} />
         {data.map((item: any) => (
-          <div className={styles.post} key={item.id}>
+          <div className={styles.post} key={item?.id}>
             <div className={styles.userData}>
-              <UserData userId={item.userId} />
+              <UserData userId={item?.userId} />
             </div>
             <div className={styles.postContent}>
-              <div>{item.postContent?.text}</div>
-              <img width={300} height={200} src={item.postContent?.image}/>
+              <div>{item?.postContent?.text}</div>
+              {item?.postContent?.image && (
+                <img width={300} height={200} src={item.postContent?.image} alt="Post" />
+              )}
+            </div>
+            <div>
+              <FontAwesomeIcon 
+                icon={faTrashCan} 
+                color="red" 
+                onClick={() => handleDelete(item.id)} 
+              />
             </div>
           </div>
         ))}
