@@ -38,6 +38,8 @@ export default function ForumDataFetch() {
     fetchData();
   }, []);
 
+  console.log(data,"data")
+
   return (
     <div className={styles.main}>
       <div className={styles.container}>
@@ -52,30 +54,7 @@ export default function ForumDataFetch() {
             </div>
             <div className={styles.postContent}>
               <div>{item.postContent?.text}</div>
-              {item.postContent?.images && (
-                <div>
-                  <Swiper
-                    navigation
-                    spaceBetween={10}
-                    slidesPerView={2}
-                    grabCursor={true}
-                    pagination={{ clickable: true }}
-                  >
-                    {item.postContent.images?.map(
-                      (postImage: any, index: any) => (
-                        <SwiperSlide key={index}>
-                          <Image
-                            src={postImage}
-                            alt={`Post image ${index + 1}`}
-                            width={110}
-                            height={140}
-                          />
-                        </SwiperSlide>
-                      )
-                    )}
-                  </Swiper>
-                </div>
-              )}
+              <img width={300} height={200} src={item.postContent?.image}/>
             </div>
           </div>
         ))}
