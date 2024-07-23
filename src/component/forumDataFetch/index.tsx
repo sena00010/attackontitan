@@ -1,18 +1,21 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import styles from "./forum.module.css";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PostCreated from "@/component/createPost";
 import { collection, getDocs, getFirestore } from "@firebase/firestore";
 import { app } from "@/app/layout";
 import UserData from "./userData";
 import DeletePost from "../deletePost"; // Fonksiyonu içe aktar
+import UpdatedPost from "../UpdatedPost";
 
 export default function ForumDataFetch() {
   const [data, setData] = useState<any[]>([]);
   const db = getFirestore(app);
   const [openPost, setOpenPost] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
+  console.log(openUpdate,"openUpdate")
 
   const fetchData = async () => {
     try {
@@ -40,6 +43,7 @@ export default function ForumDataFetch() {
     <div className={styles.main}>
       <div className={styles.container}>
         <PostCreated opened={openPost} setOpenPost={setOpenPost} />
+        <UpdatedPost open = {openUpdate} setOpenUpdate={setOpenUpdate}/>
         {data.map((item: any) => (
           <div className={styles.post} key={item?.id}>
             <div className={styles.userData}>
@@ -57,6 +61,9 @@ export default function ForumDataFetch() {
                 color="red" 
                 onClick={() => handleDelete(item.id)} 
               />
+            </div>
+            <div>
+            <FontAwesomeIcon icon={faPenToSquare} color="blue" onClick={() => setOpenUpdate(true)} />
             </div>
           </div>
         ))}
