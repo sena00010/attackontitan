@@ -4,10 +4,10 @@ import styles from "./forum.module.css";
 import { faPenToSquare, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PostCreated from "@/component/createPost";
-import { collection, getDocs, getFirestore } from "@firebase/firestore";
+import { collection, getDocs, getFirestore, doc, getDoc } from "firebase/firestore";
 import { app } from "@/app/layout";
 import UserData from "./userData";
-import DeletePost from "../deletePost"; // Fonksiyonu içe aktar
+import DeletePost from "../deletePost";
 import UpdatedPost from "../UpdatedPost";
 
 export default function ForumDataFetch() {
@@ -15,7 +15,7 @@ export default function ForumDataFetch() {
   const db = getFirestore(app);
   const [openPost, setOpenPost] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
-  console.log(openUpdate,"openUpdate")
+  const [selectedPost, setSelectedPost] = useState<any>(null);
 
   const fetchData = async () => {
     try {
@@ -39,12 +39,33 @@ export default function ForumDataFetch() {
     await DeletePost(postId, fetchData);
   };
 
+  const handleUpdate = async (postId: string) => {
+    try {
+      const postRef = doc(db, "post", postId);
+      const postSnap = await getDoc(postRef);
+      if (postSnap.exists()) {
+        setSelectedPost({ id: postId, ...postSnap.data() });
+        setOpenUpdate(true);
+      } else {
+        console.log("Document not found");
+      }
+    } catch (error) {
+      console.error("Error fetching document:", error);
+    }
+  };
+
   return (
     <div className={styles.main}>
       <div className={styles.container}>
         <PostCreated opened={openPost} setOpenPost={setOpenPost} />
-        <UpdatedPost open = {openUpdate} setOpenUpdate={setOpenUpdate}/>
-        {data.map((item: any) => (
+        <UpdatedPost
+          selectedPost={selectedPost}
+          data={fetchData}
+          open={openUpdate}
+          setOpenUpdate={setOpenUpdate}
+          setPost={setData}
+        />
+        {data?.map((item: any) => (
           <div className={styles.post} key={item?.id}>
             <div className={styles.userData}>
               <UserData userId={item?.userId} />
@@ -63,7 +84,11 @@ export default function ForumDataFetch() {
               />
             </div>
             <div>
-            <FontAwesomeIcon icon={faPenToSquare} color="blue" onClick={() => setOpenUpdate(true)} />
+              <FontAwesomeIcon 
+                icon={faPenToSquare} 
+                color="blue" 
+                onClick={() => handleUpdate(item.id)} 
+              />
             </div>
           </div>
         ))}

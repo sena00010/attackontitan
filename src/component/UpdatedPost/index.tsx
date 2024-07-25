@@ -1,30 +1,55 @@
-import React from 'react'
-interface Project {
-  uid: string;
-  name: string;
-  description: string;
-  image: string;
-  link: string;
-}
+import React, { useState, useEffect } from 'react';
+import styles from './updated.module.css';
+import { updateDoc, doc, getFirestore } from 'firebase/firestore';
+import { app } from '@/app/layout';
 
-interface UpdateInputProps {
-  open: boolean;
-  data: () => Promise<Project[]>;
-  setOpenUpdate: (open: boolean) => void;
-  setProjects: (projects: Project[]) => void;
-}
+const UpdatedPost = ({ open, data, setOpenUpdate, setPost, selectedPost }:any) => {
+  const db = getFirestore(app);
+  const [postContent, setPostContent] = useState({ text: '', image: '' });
+console.log(setPost,"setPost")
+console.log(setOpenUpdate,"setOpenUpdate")
+  useEffect(() => {
+    if (selectedPost) {
+      setPostContent({
+        text: selectedPost.postContent.text || '',
+        image: selectedPost.postContent.image || '',
+      });
+    }
+  }, [selectedPost]);
 
-const UpdatedPost = ({
-  open,
-  data,
-  setOpenUpdate,
-  setProjects,
-}: UpdateInputProps) => {
   if (!open) return null;
 
-  return (
-    <div>UpdatedPost</div>
-  );
-}
+  const handleUpdate = async () => {
+    if (selectedPost) {
+      const postRef = doc(db, "post", selectedPost.id);
+      await updateDoc(postRef, {
+        postContent: postContent
+      });
+      setOpenUpdate(false);
+      const updatedPosts = await data();
+      setPost(updatedPosts);
+    }
+  };
 
-export default UpdatedPost
+  return (
+    <div className={styles.overlay}>
+      <div className={styles.container}>
+      <form className={styles.form}>
+        <input
+            className={styles.textAreaInput}
+            value={postContent.text}
+          onChange={(e) => setPostContent({ ...postContent, text: e.currentTarget.value })}
+        />
+        <input
+            className={styles.textAreaInput}
+            value={postContent.image}
+          onChange={(e) => setPostContent({ ...postContent, image: e.currentTarget.value })}
+        />
+        </form>
+        <button className={styles.submitButton} onClick={handleUpdate}>Güncellemeyi Kaydet</button>
+      </div>
+    </div>
+  );
+};
+
+export default UpdatedPost;
