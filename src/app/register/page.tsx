@@ -3,43 +3,83 @@ import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import styles from "./register.module.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { app } from "../layout";
+import { initializeApp } from "firebase/app";
+import { setDoc, doc, getFirestore } from "firebase/firestore";
 
 export default function RegisterPage() {
+  const firebaseConfig = {
+    apiKey: "AIzaSyBrCP4cdAO3iugcXw_3tC-P7Tc6ejaHcn4",
+    authDomain: "animepression.firebaseapp.com",
+    databaseURL: "https://animepression-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "animepression",
+    storageBucket: "animepression.appspot.com",
+    messagingSenderId: "443513559646",
+    appId: "1:443513559646:web:b9876ea8b060b6aa82b2cf",
+    measurementId: "G-Z2X190YYL9",
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
   const auth = getAuth(app);
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     phone: "",
-    birthday: ""
+    birthday: "",
+    favoriteAnimes: "",
+    favoriteMangas: "",
+    userBirthDay: "",
+    userHobbies: "",
+    userInfo: "",
+    userLastName: "",
+    userName: "",
+    userNickname: "",
+    userProfilePictures: ""
   });
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    createUserWithEmailAndPassword(auth, formData.email, formData.password,)
-      .then((userCredential) => {
-        // Signed up 
+    createUserWithEmailAndPassword(auth, formData.email, formData.password)
+      .then(async (userCredential) => {
         const user = userCredential.user;
-        console.log(user);
-        router.push('/login');
-        // ...
+        try {
+          await setDoc(doc(db, "user", user.uid), {
+            uid: user.uid, 
+            email: formData.email,
+            phone: formData.phone,
+            birthday: formData.birthday,
+            favoriteAnimes: formData.favoriteAnimes,
+            favoriteMangas: formData.favoriteMangas,
+            userBirthDay: formData.userBirthDay,
+            userHobbies: formData.userHobbies,
+            userInfo: formData.userInfo,
+            userLastName: formData.userLastName,
+            userName: formData.userName,
+            userNickname: formData.userNickname,
+            userProfilePictures: formData.userProfilePictures
+          });
+          console.log("Document written with ID: ", user.uid);
+          console.log(user);
+          router.push('/login');
+        } catch (e) {
+          console.error("Error adding document: ", e);
+        }
       })
       .catch((error) => {
-        console.log(formData,'formData')
-        const errorCode = error.code;
+        console.log(formData, 'formData');
         const errorMessage = error.message;
-        console.log('errorMessage',errorMessage);
-        if(errorMessage==='Firebase: Error (auth/email-already-in-use).'){
-          alert('Bu mail zaten var')
-        }else{
-          alert(errorMessage)
+        console.log('errorMessage', errorMessage);
+        if (errorMessage === 'Firebase: Error (auth/email-already-in-use).') {
+          alert('Bu mail zaten var');
+        } else {
+          alert(errorMessage);
         }
-        // ..
       });
   };
 
@@ -56,7 +96,7 @@ export default function RegisterPage() {
                 />
               </div>
               <h1 className={styles.title}>Register!</h1>
-              <form className={styles.formıtems} >
+              <form className={styles.formıtems}>
                 <input
                   type="text"
                   className={styles.input}
@@ -87,6 +127,78 @@ export default function RegisterPage() {
                   placeholder="BirthDay"
                   name="birthday"
                   value={formData.birthday}
+                  onChange={handleChange}
+                />
+                <input
+                  type="text"
+                  className={styles.input}
+                  placeholder="Favorite Animes"
+                  name="favoriteAnimes"
+                  value={formData.favoriteAnimes}
+                  onChange={handleChange}
+                />
+                <input
+                  type="text"
+                  className={styles.input}
+                  placeholder="Favorite Mangas"
+                  name="favoriteMangas"
+                  value={formData.favoriteMangas}
+                  onChange={handleChange}
+                />
+                <input
+                  type="text"
+                  className={styles.input}
+                  placeholder="User BirthDay"
+                  name="userBirthDay"
+                  value={formData.userBirthDay}
+                  onChange={handleChange}
+                />
+                <input
+                  type="text"
+                  className={styles.input}
+                  placeholder="User Hobbies"
+                  name="userHobbies"
+                  value={formData.userHobbies}
+                  onChange={handleChange}
+                />
+                <input
+                  type="text"
+                  className={styles.input}
+                  placeholder="User Info"
+                  name="userInfo"
+                  value={formData.userInfo}
+                  onChange={handleChange}
+                />
+                <input
+                  type="text"
+                  className={styles.input}
+                  placeholder="User Last Name"
+                  name="userLastName"
+                  value={formData.userLastName}
+                  onChange={handleChange}
+                />
+                <input
+                  type="text"
+                  className={styles.input}
+                  placeholder="User Name"
+                  name="userName"
+                  value={formData.userName}
+                  onChange={handleChange}
+                />
+                <input
+                  type="text"
+                  className={styles.input}
+                  placeholder="User Nickname"
+                  name="userNickname"
+                  value={formData.userNickname}
+                  onChange={handleChange}
+                />
+                <input
+                  type="text"
+                  className={styles.input}
+                  placeholder="User Profile Pictures"
+                  name="userProfilePictures"
+                  value={formData.userProfilePictures}
                   onChange={handleChange}
                 />
                 <div className={styles.buttonContainer}>
