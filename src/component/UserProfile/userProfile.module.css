@@ -1,0 +1,92 @@
+.main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(to right, #ff7e5f, #feb47b);
+}
+
+.profileContainer {
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+    width: 350px;
+    margin: 20px auto;
+    border: 2px solid #feb47b;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profileContainer:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.profilePicture {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border: 4px solid #fff;
+}
+
+.profilePicture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.placeholderPicture {
+    background: #000;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.profileDetails {
+    margin-top: 80px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ff7e5f;
+    transition: background 0.3s ease;
+}
+
+.profileDetails h1 {
+    font-size: 26px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.profileDetails p {
+    font-size: 18px;
+    margin: 8px 0;
+    transition: color 0.3s ease;
+}
+
+.profileDetails p:hover {
+    color: #ff7e5f;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.profileContainer, .profileDetails {
+    animation: fadeIn 0.5s ease-in-out;
+}

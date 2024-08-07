@@ -9,6 +9,7 @@ import { app } from "@/app/layout";
 import UserData from "./userData";
 import DeletePost from "../deletePost";
 import UpdatedPost from "../UpdatedPost";
+import ForumTopSide from "../ForumTopSide";
 
 export default function ForumDataFetch() {
   const [data, setData] = useState<any[]>([]);
@@ -56,6 +57,7 @@ export default function ForumDataFetch() {
 
   return (
     <div className={styles.main}>
+      <ForumTopSide/>
       <div className={styles.container}>
         <PostCreated opened={openPost} setOpenPost={setOpenPost} />
         <UpdatedPost
