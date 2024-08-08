@@ -69,11 +69,44 @@
 .profileDetails p {
     font-size: 18px;
     margin: 8px 0;
-    transition: color 0.3s ease;
 }
 
-.profileDetails p:hover {
-    color: #ff7e5f;
+.profileDetails label {
+    display: block;
+    margin: 10px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.profileDetails input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+}
+
+.profileDetails input:focus {
+    border-color: #ff7e5f;
+    outline: none;
+}
+
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #ff7e5f;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    margin: 10px 5px;
+}
+
+.button:hover {
+    background-color: #feb47b;
+    transform: translateY(-2px);
 }
 
 @keyframes fadeIn {
@@ -89,4 +122,29 @@
 
 .profileContainer, .profileDetails {
     animation: fadeIn 0.5s ease-in-out;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modalContent {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modalContent p {
+    margin-bottom: 20px;
+    font-size: 18px;
 }
