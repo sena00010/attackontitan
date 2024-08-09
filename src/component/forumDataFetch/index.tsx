@@ -13,6 +13,7 @@ import ForumTopSide from "../ForumTopSide";
 
 export default function ForumDataFetch() {
   const [data, setData] = useState<any[]>([]);
+  console.log(data,"data")
   const db = getFirestore(app);
   const [openPost, setOpenPost] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
@@ -57,7 +58,7 @@ export default function ForumDataFetch() {
 
   return (
     <div className={styles.main}>
-      <ForumTopSide/>
+      <ForumTopSide  profilePicture={""}/>
       <div className={styles.container}>
         <PostCreated opened={openPost} setOpenPost={setOpenPost} />
         <UpdatedPost

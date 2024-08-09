@@ -4,6 +4,7 @@ import { doc, getDoc, updateDoc, deleteDoc, getFirestore } from "firebase/firest
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from "@/app/layout";
 import styles from './userProfile.module.css';
+import ForumTopSide from "../ForumTopSide";
 
 const UserProfile = () => {
   const [data, setData] = useState<any | null>(null);

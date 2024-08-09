@@ -1,18 +1,30 @@
 'use client'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { app } from "../layout";
 import styles from "./login.module.css";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { doc, getDoc, getFirestore } from "firebase/firestore";
+import { useAtom } from 'jotai';
+import { userAtom } from '../../atoms/userAtoms';
 
 export default function LoginPage() {
-
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const auth = getAuth(app);
   const router = useRouter();
+  const [user, setUser] = useAtom(userAtom);
+  const db = getFirestore(app);
+
+  // Sayfa yüklendiğinde, localStorage'dan kullanıcıyı çek
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -22,24 +34,38 @@ export default function LoginPage() {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     signInWithEmailAndPassword(auth, formData.email, formData.password)
-      .then((userCredential) => {
-        // Signed up 
+      .then(async (userCredential) => {
+        // Signed in 
         const user = userCredential.user;
+        
+        // Kullanıcı verilerini Firestore'dan çek
+        const userDoc = doc(db, "user", user.uid);
+        const userSnapshot = await getDoc(userDoc);
+        if (userSnapshot.exists()) {
+          const userData = { id: userSnapshot.id, ...userSnapshot.data() } as User;
+          
+          // Kullanıcı verilerini atom'a ve localStorage'a setle
+          setUser(userData);
+          localStorage.setItem('user', JSON.stringify(userData));
+        } else {
+          console.error("User data not found");
+        }
+        
         router.push('/');
-        // ...
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode, errorMessage);
         console.log(formData.email, formData.password);
-        if(errorMessage==='Firebase: Error (auth/invalid-credential).'){
-          alert('GEÇERSİZ BIR E-MAİL VEYA SİFRE')
-        }else{
-          alert(errorMessage)
-        }        // ..
+        if(errorMessage === 'Firebase: Error (auth/invalid-credential).'){
+          alert('GEÇERSİZ BİR E-MAİL VEYA ŞİFRE');
+        } else {
+          alert(errorMessage);
+        }
       });
   };
+
   return (
     <div>
       <div className={styles.container}>
@@ -89,4 +115,3 @@ export default function LoginPage() {
     </div>
   );
 }
-LoginPage;
