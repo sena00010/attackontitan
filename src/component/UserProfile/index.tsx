@@ -1,13 +1,16 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { doc, getDoc, updateDoc, deleteDoc, getFirestore } from "firebase/firestore";
+import { doc, getDoc,getDocs , updateDoc, deleteDoc, getFirestore, collection } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from "@/app/layout";
 import styles from './userProfile.module.css';
 import ForumTopSide from "../ForumTopSide";
+import { log } from "console";
 
 const UserProfile = () => {
   const [data, setData] = useState<any | null>(null);
+  const [userFriendData, setUserFriendData] = useState<any | null>(null);
+  console.log(userFriendData,'userFriendData')
   const [editMode, setEditMode] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -27,6 +30,24 @@ const UserProfile = () => {
       console.error("Error fetching user data:", error);
     }
   };
+  const fetchUserFriendsData = async (userId: string) => {
+    try {
+      const userDoc = doc(db, "user", userId);
+      const friendsList=collection(userDoc,'friends');
+      const friendsSnapshot = await getDocs(friendsList);
+      if (!friendsSnapshot.empty) {
+        const friendsList = friendsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setUserFriendData(friendsList);
+      } else {
+        console.error("No friends found");
+      }
+    } catch (error) {
+      console.error("Error fetching user friends:", error);
+    }
+  };
 
   const updateUserData = async () => {
     const userDoc = doc(db, "user", data.id);
@@ -38,7 +59,6 @@ const UserProfile = () => {
   const deleteUserAccount = async () => {
     const userDoc = doc(db, "user", data.id);
     await deleteDoc(userDoc);
-    // Hesabı sildikten sonra bir şeyler yap (örneğin yönlendirme)
   };
 
   useEffect(() => {
@@ -123,7 +143,9 @@ const UserProfile = () => {
               <p>Favorite Mangas: {data.favoriteMangas}</p>
               <p>Hobbies: {data.userHobbies}</p>
               <p>Info: {data.userInfo}</p>
+              <span>{userFriendData}</span>
             </>
+
           )}
           <button className={styles.button} onClick={() => setEditMode(!editMode)}>{editMode ? "Cancel" : "Edit"}</button>
           <button className={styles.button} onClick={() => setShowDeleteModal(true)}>Delete Account</button>

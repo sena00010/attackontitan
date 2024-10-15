@@ -8,6 +8,15 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
   }
+
+  .notificationButton{
+    background: linear-gradient(90deg, rgba(255,0,150,1) 0%,rgb(184, 113, 154) 100%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 10px 5px;
+    border:0.5px solid linear-gradient(90deg, rgb(110, 37, 80) , rgba(255,0,150,1) 0%, rgb(184, 113, 154) 100%);
+    color:white;
+  }
   
   .logo {
     font-size: 24px;
