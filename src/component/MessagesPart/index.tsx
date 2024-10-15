@@ -1,106 +1,227 @@
-'use client';
+import { getAuth } from "firebase/auth";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  getFirestore,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { app } from "../../app/layout";
+import styles from "./MessagesPart.module.css";
 
-import { useEffect, useState } from 'react';
-import { 
-  collection, 
-  addDoc, 
-  getFirestore, 
-  onSnapshot, 
-  query, 
-  doc, 
-  getDoc 
-} from 'firebase/firestore';
-import { app } from '../../app/layout';
-import styles from './MessagesPart.module.css';
-import { getAuth } from 'firebase/auth';
+// Define a type for user data
+type UserData = {
+  userName: string;
+  userProfilePicture: string;
+};
 
-const MessagesPart = ({ roomId }: { roomId: any }) => {
+const MessagesPart = ({ roomId }: { roomId: string }) => {
   const db = getFirestore(app);
   const [messages, setMessages] = useState<any[]>([]);
-  const [messageContent, setMessageContent] = useState('');
-  const [member, setMember] = useState<any>({});
+  const [messageContent, setMessageContent] = useState("");
+  const [usersMap, setUsersMap] = useState<Map<string, UserData>>(new Map());
+  const [roomsData, setRoomsData] = useState<any[]>([]);
+  const router = useRouter();
 
-  const getMemberMessage = async (senderId: string) => {
+  // Fetch all users' data and store in a Map
+  const fetchAllUsersData = async () => {
     try {
-      const docRef = doc(db, 'user', senderId);
-      const docSnap = await getDoc(docRef);
+      const usersSnapshot = await getDocs(collection(db, "user"));
+      const userMap = new Map<string, UserData>();
 
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        console.log(userData, 'userData');
-        setMember(userData);
-      } else {
-        console.log('No such user!');
-      }
+      usersSnapshot.forEach((doc) => {
+        const data = doc.data();
+        const userData: UserData = {
+          userName: data.userName || "Bilinmiyor",
+          userProfilePicture: data.userProfilePictures || "default-profile.png",
+        };
+        userMap.set(doc.id, userData);
+      });
+
+      setUsersMap(userMap);
     } catch (error) {
-      console.error('Error fetching user:', error);
+      console.error("Error fetching users:", error);
     }
+  };
+
+  // Fetch rooms and their last message
+  const fetchRoomsAndLastMessage = () => {
+    const roomsCollection = collection(db, "rooms");
+
+    const unsubscribe = onSnapshot(roomsCollection, async (snapshot) => {
+      const roomsWithLastMessage = await Promise.all(
+        snapshot.docs.map(async (roomDoc) => {
+          const roomId = roomDoc.id;
+          const roomData = roomDoc.data();
+
+          // Fetch the last message of the room, ordered by timestamp
+          const messagesQuery = query(
+            collection(db, "rooms", roomId, "messages"),
+            orderBy("timestamp", "desc"),
+            limit(1) // Get only the last message
+          );
+          const messagesSnapshot = await getDocs(messagesQuery);
+
+          const lastMessage = messagesSnapshot.docs[0]
+            ? messagesSnapshot.docs[0].data()
+            : null;
+
+          return {
+            id: roomId,
+            ...roomData,
+            lastMessageContent:
+              lastMessage?.messageContent || "Henüz mesaj yok",
+            lastMessageTimestamp: lastMessage?.timestamp?.seconds
+              ? new Date(lastMessage.timestamp.seconds * 1000).toLocaleString(
+                  "tr-TR"
+                )
+              : "Zaman yok",
+          };
+        })
+      );
+
+      setRoomsData(roomsWithLastMessage);
+    });
+
+    return unsubscribe; // Make sure to unsubscribe later
   };
 
   useEffect(() => {
     if (!roomId) return;
 
-    const q = query(collection(db, 'rooms', roomId, 'messages'));
-    const unsubscribe = onSnapshot(q, async (snapshot) => {
-      const messagesData = snapshot.docs.map((doc) => ({
+    // Fetch all user data on mount
+    fetchAllUsersData();
+
+    // Listen for new messages in the room, ordered by timestamp
+    const messagesQuery = query(
+      collection(db, "rooms", roomId, "messages"),
+      orderBy("timestamp", "asc") // Sort messages by timestamp in ascending order
+    );
+    const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
+      const newMessages = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      setMessages(messagesData);
 
-      if (messagesData.length > 0) {
-        const lastMessage = messagesData[messagesData.length - 1];
-        await getMemberMessage(lastMessage.senderId);
-      }
+      setMessages(newMessages);
     });
 
     return () => unsubscribe();
   }, [roomId]);
 
+  useEffect(() => {
+    const unsubscribe = fetchRoomsAndLastMessage();
+    return () => unsubscribe();
+  }, [db]);
+
+  // Handle sending a new message
   const sendMessage = async () => {
+    const currentUserId = getAuth(app).currentUser?.uid;
+
+    if (!messageContent.trim() || !currentUserId) return;
+
     try {
-      await addDoc(collection(db, 'rooms', roomId, 'messages'), {
-        messageContent: messageContent,
-        messageType: 'text',
+      await addDoc(collection(db, "rooms", roomId, "messages"), {
+        messageContent,
+        messageType: "text",
         timestamp: new Date(),
-        senderId: await getAuth(app).currentUser?.uid,
+        senderId: currentUserId,
       });
-      setMessageContent('');
+      setMessageContent(""); // Clear the input after sending the message
     } catch (error) {
-      console.error('Error sending message: ', error);
+      console.error("Error sending message: ", error);
     }
   };
 
   return (
-    <div>
-      <h2>Room ID: {roomId}</h2>
-      <div className={styles.messagesContainer}>
-        {messages.map((message) => (
-          <div key={message.id} className={styles.message}>
-            <div className={styles.messageHeader}>
+    <div className={styles.appContainer}>
+      {/* Sidebar */}
+      <div className={styles.sidebar}>
+        <div className={styles.sidebarHeader}>
+          <h3>Chats</h3>
+        </div>
+
+        <div className={styles.chatsList}>
+          {roomsData.map((room) => (
+            <div
+              key={room.id}
+              className={styles.chatItem}
+              onClick={() => router.push(`/rooms/${room.id}`)}
+            >
               <img
-                src={member?.userProfilePictures || 'default-profile.png'}
-                alt="Sender"
+                src={room.roomImage}
+                alt={room.roomName}
+                className={styles.chatImage}
               />
-              <span>{member?.userName || 'Bilinmiyor'}</span>
+              <div className={styles.chatDetails}>
+                <span className={styles.chatName}>{room.roomName}</span>
+                <span className={styles.chatPreview}>
+                  {room.lastMessageContent}
+                </span>
+              </div>
+              <span className={styles.chatTime}>
+                {room.lastMessageTimestamp}
+              </span>
             </div>
-            <div className={styles.messageContent}>{message.messageContent}</div>
-            <div className={styles.messageTimestamp}>
-              {new Date(message.timestamp?.seconds * 1000).toLocaleString('tr-TR')}
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-      <input
-        type="text"
-        className={styles.inputField}
-        value={messageContent}
-        onChange={(e) => setMessageContent(e.target.value)}
-        placeholder="Mesajınızı yazın..."
-      />
-      <button onClick={sendMessage} className={styles.sendButton}>
-        Gönder
-      </button>
+
+      {/* Chat Window */}
+      <div className={styles.chatWindow}>
+        <div className={styles.chatHeader}>
+          <h2>Room ID: {roomId}</h2>
+        </div>
+
+        <div className={styles.messagesContainer}>
+          {messages.map((message) => {
+            const member = usersMap.get(message.senderId) || {
+              userName: "Bilinmiyor",
+              userProfilePicture: "default-profile.png",
+            };
+
+            return (
+              <div key={message.id} className={styles.message}>
+                <div className={styles.messageHeader}>
+                  <img
+                    src={member.userProfilePicture}
+                    alt="Sender"
+                    className={styles.profilePicture}
+                  />
+                  <span>{member.userName}</span>
+                </div>
+                <div className={styles.messageContent}>
+                  {message.messageContent}
+                </div>
+                <div className={styles.messageTimestamp}>
+                  {new Date(message.timestamp?.seconds * 1000).toLocaleString(
+                    "tr-TR"
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Input Field */}
+        <div className={styles.inputContainer}>
+          <input
+            type="text"
+            className={styles.inputField}
+            value={messageContent}
+            onChange={(e) => setMessageContent(e.target.value)}
+            placeholder="Type a message..."
+          />
+          <button onClick={sendMessage} className={styles.sendButton}>
+            Send
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

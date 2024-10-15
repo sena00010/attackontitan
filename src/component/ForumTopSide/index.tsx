@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import styles from './forumTopSide.module.css';
-import { useAtom } from 'jotai';
-import { userAtom } from '../../atoms/userAtoms';
-import NotificationPopover from '../notifications';
+import { useAtom } from "jotai";
+import React, { useEffect, useState } from "react";
+import { userAtom } from "../../atoms/userAtoms";
+import NotificationPopover from "../notifications";
+import styles from "./forumTopSide.module.css";
 
-const ForumTopSide: React.FC<{ profilePicture: string }> = ({ profilePicture }) => {
+const ForumTopSide: React.FC<{ profilePicture: string }> = ({
+  profilePicture,
+}) => {
   const [data, setData] = useAtom(userAtom);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('user');
+    const savedUser = localStorage.getItem("user");
     if (savedUser) {
       setData(JSON.parse(savedUser));
     }
   }, []);
 
   const handleToggle = () => {
-    setOpen(prevOpen => !prevOpen);
+    setOpen((prevOpen) => !prevOpen);
   };
 
   return (
@@ -24,13 +26,22 @@ const ForumTopSide: React.FC<{ profilePicture: string }> = ({ profilePicture }) 
       <div className={styles.logo}>Animepression</div>
       <div className={styles.menu}>
         <a href="/profile" className={styles.menuItem}>
-          <img src={data?.userProfilePictures || profilePicture} className={styles.profilePicture} />
+          <img
+            src={data?.userProfilePictures || profilePicture}
+            className={styles.profilePicture}
+          />
         </a>
-        <a href="/messages" className={styles.menuItem}>Messages</a>
-        <a href="/logout" className={styles.menuItem}>Logout</a>
+        <a href="/rooms" className={styles.menuItem}>
+          Messages
+        </a>
+        <a href="/logout" className={styles.menuItem}>
+          Logout
+        </a>
       </div>
       <div>
-        <a href="/friendrequest" className={styles.menuItem}>find a new friend!</a>
+        <a href="/friendrequest" className={styles.menuItem}>
+          find a new friend!
+        </a>
       </div>
       <div>
         <button onClick={handleToggle} className={styles.notificationButton}>
@@ -40,6 +51,6 @@ const ForumTopSide: React.FC<{ profilePicture: string }> = ({ profilePicture }) 
       </div>
     </div>
   );
-}
+};
 
 export default ForumTopSide;
