@@ -27,6 +27,7 @@ const MessagesPart = ({ roomId }: { roomId: string }) => {
   const [usersMap, setUsersMap] = useState<Map<string, UserData>>(new Map());
   const [roomsData, setRoomsData] = useState<any[]>([]);
   const router = useRouter();
+  console.log(roomsData,'roomsData')
 
   // Fetch all users' data and store in a Map
   const fetchAllUsersData = async () => {
@@ -175,7 +176,9 @@ const MessagesPart = ({ roomId }: { roomId: string }) => {
       {/* Chat Window */}
       <div className={styles.chatWindow}>
         <div className={styles.chatHeader}>
-          <h2>Room ID: {roomId}</h2>
+          {<img src={roomsData[0]?.roomImage} alt="roomImage" className={styles.profileRoomPicture}
+ width={100} height={100}/>}
+          <h2>{roomsData[0]?.roomName}</h2>
         </div>
 
         <div className={styles.messagesContainer}>
