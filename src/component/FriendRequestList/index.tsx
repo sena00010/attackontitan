@@ -12,10 +12,13 @@ import {
 import { useAtom } from "jotai";
 import { userAtom } from "@/atoms/userAtoms";
 import { useRouter } from "next/navigation";
+import OtherUserProfile from "../otherUserProfile";
 
 const FriendRequestList = () => {
   const [data, setData] = useAtom(userAtom);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [sentRequests, setSentRequests] = useState<string[]>([]); // Gönderilen isteklerin ID'lerini tutmak için state
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null); // Seçilen kullanıcı ID'sini tutmak için state
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
@@ -31,7 +34,7 @@ const FriendRequestList = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       const userCollection = collection(db, "user");
-      console.log(userCollection,'userCollection')
+      console.log(userCollection, "userCollection");
       const userSnapshot = await getDocs(userCollection);
       const userList = userSnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -65,13 +68,24 @@ const FriendRequestList = () => {
       console.error("Arkadaşlık isteği gönderilirken hata oluştu:", error);
     }
   };
+
+  const handleUserClick = (id: string) => {
+    setSelectedUserId(id); // Seçilen kullanıcı ID'sini set et
+    setProfileOpen(true); // Profili aç
+  };
+
   const router = useRouter();
+  
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>Tüm kullanıcılar</h2>
       <ul className={styles.userList}>
         {users.map((user) => (
-          <li key={user.id} className={styles.userItem}>
+          <li 
+            key={user.id} 
+            className={styles.userItem}  
+            onClick={() => handleUserClick(user.id)} // Kullanıcıya tıklandığında profili aç
+          >
             {user.userProfilePictures && (
               <img
                 src={user.userProfilePictures}
@@ -89,13 +103,20 @@ const FriendRequestList = () => {
                   ? styles.requestSentButton
                   : styles.addFriendButton
               }
-              onClick={() => handleAddFriend(user.id)}
+              onClick={(e) => {
+                e.stopPropagation(); // Butona tıklayınca profili açmayı durdurmak için
+                handleAddFriend(user.id);
+              }}
               disabled={sentRequests.includes(user.id)}
             >
               {sentRequests.includes(user.id)
                 ? "Arkadaşlık İsteği Gönderildi"
                 : "Arkadaş Olarak Ekle"}
             </button>
+
+            {profileOpen && selectedUserId === user.id && (
+              <OtherUserProfile id={user.id} opened={profileOpen} />
+            )}
           </li>
         ))}
       </ul>
