@@ -29,10 +29,8 @@ export default function RegisterPage() {
     birthday: "",
     favoriteAnimes: "",
     favoriteMangas: "",
-    userBirthDay: "",
     userHobbies: "",
     userInfo: "",
-    userLastName: "",
     userName: "",
     userNickname: "",
     userProfilePictures: ""
@@ -56,10 +54,8 @@ export default function RegisterPage() {
             birthday: formData.birthday,
             favoriteAnimes: formData.favoriteAnimes,
             favoriteMangas: formData.favoriteMangas,
-            userBirthDay: formData.userBirthDay,
             userHobbies: formData.userHobbies,
             userInfo: formData.userInfo,
-            userLastName: formData.userLastName,
             userName: formData.userName,
             userNickname: formData.userNickname,
             userProfilePictures: formData.userProfilePictures
@@ -148,14 +144,6 @@ export default function RegisterPage() {
                 <input
                   type="text"
                   className={styles.input}
-                  placeholder="User BirthDay"
-                  name="userBirthDay"
-                  value={formData.userBirthDay}
-                  onChange={handleChange}
-                />
-                <input
-                  type="text"
-                  className={styles.input}
                   placeholder="User Hobbies"
                   name="userHobbies"
                   value={formData.userHobbies}
@@ -167,14 +155,6 @@ export default function RegisterPage() {
                   placeholder="User Info"
                   name="userInfo"
                   value={formData.userInfo}
-                  onChange={handleChange}
-                />
-                <input
-                  type="text"
-                  className={styles.input}
-                  placeholder="User Last Name"
-                  name="userLastName"
-                  value={formData.userLastName}
                   onChange={handleChange}
                 />
                 <input

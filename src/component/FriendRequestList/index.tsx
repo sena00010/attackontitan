@@ -68,14 +68,15 @@ const FriendRequestList = () => {
       console.error("Arkadaşlık isteği gönderilirken hata oluştu:", error);
     }
   };
-
-  const handleUserClick = (id: string) => {
-    setSelectedUserId(id); // Seçilen kullanıcı ID'sini set et
-    setProfileOpen(true); // Profili aç
-  };
-
   const router = useRouter();
   
+  const handleUserClick = (id: string) => {
+    setSelectedUserId(id); 
+    setProfileOpen(true);
+   router.push(`/otherUserProfile/${id}`)
+  }
+  
+
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>Tüm kullanıcılar</h2>
@@ -94,8 +95,8 @@ const FriendRequestList = () => {
               />
             )}
             <div className={styles.userInfo}>
-              <h3 className={styles.userName}>{user.name}</h3>
-              <p className={styles.userNickname}>{user.email}</p>
+              <h3 className={styles.userName}>{user.userName}</h3>
+              <p className={styles.userNickname}>{user.userLastName}</p>
             </div>
             <button
               className={
