@@ -15,14 +15,20 @@ interface NotificationPopoverProps {
   open: boolean;
   onToggle: () => void;
 }
-
+interface Notification {
+  id: string;
+  user_id: string;
+  friend_id: string;
+  friend?: { uid: string; userName: string };
+  user?: { uid: string; userName: string };
+}
 const NotificationPopover: React.FC<NotificationPopoverProps> = ({
   open,
   onToggle,
 }) => {
   const popoverRef = useRef<HTMLDivElement>(null);
   const db = getFirestore(app);
-  const [notif, setNotif] = useState<any[]>([]);
+  const [notif, setNotif] = useState<Notification[]>([]);
   const auth = getAuth(app);
 
   console.log(notif, 'notif');
@@ -93,19 +99,19 @@ const NotificationPopover: React.FC<NotificationPopoverProps> = ({
           {notif.length > 0 ? (
             notif.map((notification) => (
               notification.friend?.uid !== userId ? (
-                <div key={notification.friend?.userName}>
-                  <p>{`${notification.friend?.userName} kişisine arkadaşlık isteği gönderdiniz.`}</p>
+                <div key={notification.friend?.userName} className={styles.notificationItem}>
+                  <p className={styles.notificationText}>{`${notification.friend?.userName} kişisine arkadaşlık isteği gönderdiniz.`}</p>
                 </div>
               ) : (
-                <div key={notification.user?.userName}>
-                  <p>{`${notification.user?.userName} kişisinden arkadaşlık isteği aldınız.`}</p>
-                  <button>Kabul et</button>
-                  <button>Reddet</button>
+                <div key={notification.user?.userName} className={styles.notificationItem}>
+                  <p className={styles.notificationText}>{`${notification.user?.userName} kişisinden arkadaşlık isteği aldınız.`}</p>
+                  <button className={styles.acceptButton}>Kabul et</button>
+                  <button className={styles.rejectButton}>Reddet</button>
                 </div>
               )
             ))
           ) : (
-            <p>Hiç bildirim yok</p>
+            <p className={styles.noNotificationText}>Hiç bildirim yok</p>
           )}
         </div>
       )}

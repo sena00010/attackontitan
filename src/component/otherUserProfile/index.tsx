@@ -108,7 +108,7 @@ useEffect(() => {
 console.log('userData',userData);
   return (
     <div className={styles.profileContainer}>
-      <h3 className={styles.title}>Kullanıcı Profili</h3>
+      <h3 className={styles.title}>{`${userData.userNickname}'s profile`}</h3>
       {userData.userProfilePictures && (
         <img
           src={userData.userProfilePictures}
@@ -117,12 +117,20 @@ console.log('userData',userData);
         />
       )}
       <div className={styles.userInfo}>
-        <button
-         onClick=
-         {(e)=>{!invitationStatus?handleAddFriend(userData.uid)
-         :e.preventDefault();
-         }}>{invitationStatus?'istek gönderildi':'İstek Gönder'}</button>
-        <button>Mesaj gönder</button>
+      <button
+  className={`${styles.button} ${styles.requestButton}`}
+  onClick={(e) => {
+    !invitationStatus ? handleAddFriend(userData.uid) : e.preventDefault();
+  }}
+  disabled={invitationStatus}
+>
+  {invitationStatus ? "İstek Gönderildi" : "İstek Gönder"}
+</button>
+
+<button className={`${styles.button} ${styles.messageButton}`}>
+  Mesaj Gönder
+</button>
+
 
         <p><strong>İsim:</strong> {userData.userName}</p>
         <p><strong>Email:</strong> {userData.email}</p>

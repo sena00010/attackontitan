@@ -35,4 +35,78 @@
     border-style: solid;
     border-color: transparent transparent white transparent;
   }
-  
+  /* notifications.module.css */
+
+.popoverContainer {
+  position: relative;
+}
+
+.popoverContent {
+  background-color: #fff;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.notificationItem {
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.notificationItem:hover {
+  background-color: #f4f4f9;
+}
+
+.notificationText {
+  font-size: 16px;
+  color: #333;
+  margin: 0;
+}
+
+.noNotificationText {
+  font-size: 16px;
+  color: #888;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* Butonlar için */
+
+.acceptButton,
+.rejectButton {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-top: 10px;
+  margin-right: 8px;
+}
+
+/* Kabul Butonu */
+.acceptButton {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.acceptButton:hover {
+  background-color: #43a047;
+  transform: scale(1.05);
+}
+
+/* Reddet Butonu */
+.rejectButton {
+  background-color: #f44336;
+  color: #fff;
+}
+
+.rejectButton:hover {
+  background-color: #e53935;
+  transform: scale(1.05);
+}

@@ -13,7 +13,13 @@ import { useAtom } from "jotai";
 import { userAtom } from "@/atoms/userAtoms";
 import { useRouter } from "next/navigation";
 import OtherUserProfile from "../otherUserProfile";
-
+import { getAuth } from "firebase/auth";
+interface User{
+  uid:string,
+  userProfilePictures:string,
+  userName:string,
+  userLastName:string
+}
 const FriendRequestList = () => {
   const [data, setData] = useAtom(userAtom);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -27,7 +33,7 @@ const FriendRequestList = () => {
     }
   }, []);
 
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
   console.log(users, "users");
   const db = getFirestore(app);
 
@@ -75,52 +81,57 @@ const FriendRequestList = () => {
     setProfileOpen(true);
    router.push(`/otherUserProfile/${id}`)
   }
-  
+  const auth = getAuth(app);
+
+  const userId = auth.currentUser?.uid; 
 
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>Tüm kullanıcılar</h2>
       <ul className={styles.userList}>
-        {users.map((user) => (
-          <li 
-            key={user.id} 
-            className={styles.userItem}  
-            onClick={() => handleUserClick(user.id)} // Kullanıcıya tıklandığında profili aç
-          >
-            {user.userProfilePictures && (
-              <img
-                src={user.userProfilePictures}
-                alt={`${user.name}'s profile`}
-                className={styles.profilePicture}
-              />
-            )}
-            <div className={styles.userInfo}>
-              <h3 className={styles.userName}>{user.userName}</h3>
-              <p className={styles.userNickname}>{user.userLastName}</p>
-            </div>
-            <button
-              className={
-                sentRequests.includes(user.id)
-                  ? styles.requestSentButton
-                  : styles.addFriendButton
-              }
-              onClick={(e) => {
-                e.stopPropagation(); // Butona tıklayınca profili açmayı durdurmak için
-                handleAddFriend(user.id);
-              }}
-              disabled={sentRequests.includes(user.id)}
-            >
-              {sentRequests.includes(user.id)
-                ? "Arkadaşlık İsteği Gönderildi"
-                : "Arkadaş Olarak Ekle"}
-            </button>
+  {users
+    .filter((user) => user.uid !== userId)
+    .map((user) => (
+      <li
+        key={user.uid}
+        className={styles.userItem}
+        onClick={() => handleUserClick(user.uid)} 
+      >
+        {user.userProfilePictures && (
+          <img
+            src={user.userProfilePictures}
+            alt={`${user.userName}'s profile`}
+            className={styles.profilePicture}
+          />
+        )}
+        <div className={styles.userInfo}>
+          <h3 className={styles.userName}>{user.userName}</h3>
+          <p className={styles.userNickname}>{user.userLastName}</p>
+        </div>
+        <button
+          className={
+            sentRequests.includes(user.uid)
+              ? styles.requestSentButton
+              : styles.addFriendButton
+          }
+          onClick={(e) => {
+            e.stopPropagation(); // Butona tıklayınca profili açmayı durdurmak için
+            handleAddFriend(user.uid);
+          }}
+          disabled={sentRequests.includes(user.uid)}
+        >
+          {sentRequests.includes(user.uid)
+            ? "Arkadaşlık İsteği Gönderildi"
+            : "Arkadaş Olarak Ekle"}
+        </button>
 
-            {profileOpen && selectedUserId === user.id && (
-              <OtherUserProfile id={user.id} opened={profileOpen} />
-            )}
-          </li>
-        ))}
-      </ul>
+        {profileOpen && selectedUserId === user.uid && (
+          <OtherUserProfile id={user.uid} opened={profileOpen} />
+        )}
+      </li>
+    ))}
+</ul>
+
     </div>
   );
 };
