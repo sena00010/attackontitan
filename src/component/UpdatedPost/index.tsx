@@ -6,8 +6,6 @@ import { app } from '@/app/layout';
 const UpdatedPost = ({ open, data, setOpenUpdate, setPost, selectedPost }:any) => {
   const db = getFirestore(app);
   const [postContent, setPostContent] = useState({ text: '', image: '' });
-console.log(setPost,"setPost")
-console.log(setOpenUpdate,"setOpenUpdate")
   useEffect(() => {
     if (selectedPost) {
       setPostContent({

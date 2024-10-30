@@ -1,55 +1,53 @@
+'use client'
 import React, { useEffect, useState } from 'react';
-import { getFirestore, doc, getDoc, addDoc, setDoc, collection } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, addDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import styles from './profile.module.css'; 
 import { app } from '@/app/layout';
-import { useAtom } from 'jotai';
-import { userAtom } from '@/atoms/userAtoms';
 import { getAuth } from 'firebase/auth';
-import { query, where, getDocs } from 'firebase/firestore';
+import { useRouter } from "next/navigation";
 
 interface OtherUserProfileProps {
   id: string;
   opened: boolean;
 }
 
-const OtherUserProfile= ({ id, opened }:OtherUserProfileProps) => {
+const OtherUserProfile = ({ id, opened }: OtherUserProfileProps) => {
   const [userData, setUserData] = useState<any>(null);
   const db = getFirestore(app);
-  const [data, setData] = useAtom(userAtom);
-  const [invitationStatus,setInvitationStatus]=useState(false);
+  const auth = getAuth(app);
+  const router = useRouter(); // useRouter burada tanımlandı
+  const [invitationStatus, setInvitationStatus] = useState(false);
 
+  useEffect(() => {
+    const checkInvitationStatus = async () => {
+      const friendId = userData.userId;
+      const userId = auth.currentUser?.uid; 
 
-useEffect(() => {
-  const checkInvitationStatus = async () => {
-    const friendId = userData.userId;
-    const userId = auth.currentUser?.uid; 
-    
-    if (!userId || !friendId) {
-      console.error("Kullanıcı ID'leri bulunamadı");
-      return;
-    }
-
-    
-    const invitationQuery = query(
-      collection(db, 'friendInvatition'),
-      where('friend_id', '==', friendId),
-      where('user_id', '==', userId)
-    );
-
-    try {
-      const querySnapshot = await getDocs(invitationQuery);
-      if (!querySnapshot.empty) {
-        setInvitationStatus(true);  // İstek varsa durumu true yap
+      if (!userId || !friendId) {
+        console.error("Kullanıcı ID'leri bulunamadı");
+        return;
       }
-    } catch (error) {
-      console.error("Davetiye durumu kontrol edilirken hata oluştu:", error);
-    }
-  };
 
-  if (userData) {
-    checkInvitationStatus();
-  }
-}, [userData]);
+      const invitationQuery = query(
+        collection(db, 'friendInvatition'),
+        where('friend_id', '==', friendId),
+        where('user_id', '==', userId)
+      );
+
+      try {
+        const querySnapshot = await getDocs(invitationQuery);
+        if (!querySnapshot.empty) {
+          setInvitationStatus(true); 
+        }
+      } catch (error) {
+        console.error("Davetiye durumu kontrol edilirken hata oluştu:", error);
+      }
+    };
+
+    if (userData) {
+      checkInvitationStatus();
+    }
+  }, [userData]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -57,31 +55,27 @@ useEffect(() => {
         try {
           const userDocRef = doc(db, "user", id); 
           const userDoc = await getDoc(userDocRef);
-            setUserData(userDoc.data()); 
-            console.log(userData, 'data');
-            console.log(userData,'userData')
-            console.log(userDoc,'userDoc')
+          setUserData(userDoc.data()); 
         } catch (error) {
-          console.error("arror verdi:", error);
+          console.error("Error fetching user data:", error);
         }
       }
     };
 
     fetchUserData();
   }, [id, db]);
-  const auth = getAuth(app);
+
   const handleAddFriend = async (id: string) => {
     const friendId = id;
-    const userId = auth.currentUser?.uid;  // Giriş yapan kullanıcının id'sini al
+    const userId = auth.currentUser?.uid;
     const invitationCollection = collection(db, 'friendInvatition');
     const notificationCollection = collection(db, 'notification');
-    console.log('friendId', friendId, 'userId', userId);
- 
+
     if (!userId) {
       console.error("Giriş yapan kullanıcının ID'si bulunamadı");
       return;
     }
- 
+
     try {
       await addDoc(invitationCollection, {
         'friend_id': friendId,
@@ -94,18 +88,72 @@ useEffect(() => {
         'user_id': userId,
       });
       setInvitationStatus(true);
-
-      console.log(invitationStatus, 'invitationStatus');
     } catch (error) {
       console.error("Arkadaşlık isteği gönderilirken hata oluştu:", error);
     }
- };
- 
- if (!opened || !userData) {
-   return null;
- }
- 
-console.log('userData',userData);
+  };
+
+  const handleSendMessage = async (friendId: string) => {
+    const currentUserId = auth.currentUser?.uid;
+    if (!currentUserId || !userData) {
+      console.error("Giriş yapan kullanıcı bulunamadı veya kullanıcı verisi eksik.");
+      return;
+    }
+  
+    try {
+      const roomsRef = collection(db, "rooms");
+  
+      // 1. İlk sorgu: senderId = currentUserId ve receiverId = friendId olan oda var mı?
+      const firstQuery = query(
+        roomsRef,
+        where("senderId", "==", currentUserId),
+        where("receiverId", "==", friendId)
+      );
+      const firstSnapshot = await getDocs(firstQuery);
+  
+      let roomId;
+      if (!firstSnapshot.empty) {
+        roomId = firstSnapshot.docs[0].id;
+      } else {
+        // 2. İkinci sorgu: senderId = friendId ve receiverId = currentUserId olan oda var mı?
+        const secondQuery = query(
+          roomsRef,
+          where("senderId", "==", friendId),
+          where("receiverId", "==", currentUserId)
+        );
+        const secondSnapshot = await getDocs(secondQuery);
+  
+        if (!secondSnapshot.empty) {
+          roomId = secondSnapshot.docs[0].id;
+        }
+      }
+  
+      // 3. Eğer oda yoksa yeni bir oda oluştur ve profil resmi ile oda ismini ekle
+      if (!roomId) {
+        const roomData = {
+          senderId: currentUserId,
+          receiverId: friendId,
+          createdAt: new Date(),
+          roomImage: userData.userProfilePictures || "default-room-image.png", 
+          roomName: `${userData.userNickname} ile Sohbet`, 
+        };
+  
+        const newRoomRef = await addDoc(collection(db, "rooms"), roomData);
+        roomId = newRoomRef.id;
+      }
+  
+      // 4. Odaya yönlendir
+      router.push(`/rooms/${roomId}`);
+    } catch (error) {
+      console.error("Mesaj odası kontrol edilirken veya oluşturulurken hata oluştu:", error);
+    }
+  };
+  
+
+  if (!opened || !userData) {
+    return null;
+  }
+
   return (
     <div className={styles.profileContainer}>
       <h3 className={styles.title}>{`${userData.userNickname}'s profile`}</h3>
@@ -117,20 +165,22 @@ console.log('userData',userData);
         />
       )}
       <div className={styles.userInfo}>
-      <button
-  className={`${styles.button} ${styles.requestButton}`}
-  onClick={(e) => {
-    !invitationStatus ? handleAddFriend(userData.uid) : e.preventDefault();
-  }}
-  disabled={invitationStatus}
->
-  {invitationStatus ? "İstek Gönderildi" : "İstek Gönder"}
-</button>
+        <button
+          className={`${styles.button} ${styles.requestButton}`}
+          onClick={(e) => {
+            !invitationStatus ? handleAddFriend(userData.uid) : e.preventDefault();
+          }}
+          disabled={invitationStatus}
+        >
+          {invitationStatus ? "İstek Gönderildi" : "İstek Gönder"}
+        </button>
 
-<button className={`${styles.button} ${styles.messageButton}`}>
-  Mesaj Gönder
-</button>
-
+        <button 
+          className={`${styles.button} ${styles.messageButton}`} 
+          onClick={() => handleSendMessage(userData.uid)}
+        >
+          Mesaj Gönder
+        </button>
 
         <p><strong>İsim:</strong> {userData.userName}</p>
         <p><strong>Email:</strong> {userData.email}</p>
