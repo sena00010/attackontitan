@@ -1,3 +1,5 @@
+import "firebase/auth";
+import { getAuth } from "firebase/auth"; // Import getAuth
 import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import { userAtom } from "../../atoms/userAtoms";
@@ -9,6 +11,7 @@ const ForumTopSide: React.FC<{ profilePicture: string }> = ({
 }) => {
   const [data, setData] = useAtom(userAtom);
   const [open, setOpen] = useState(false);
+  const auth = getAuth(); // Get the auth instance
 
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
@@ -34,7 +37,21 @@ const ForumTopSide: React.FC<{ profilePicture: string }> = ({
         <a href="/rooms" className={styles.menuItem}>
           Messages
         </a>
-        <a href="/logout" className={styles.menuItem}>
+
+        <a
+          href="#"
+          className={styles.menuItem}
+          onClick={async (e) => {
+            e.preventDefault();
+            try {
+              await auth.signOut();
+              localStorage.clear();
+              window.location.href = "/login";
+            } catch (error) {
+              console.error("Error logging out: ", error);
+            }
+          }}
+        >
           Logout
         </a>
       </div>
