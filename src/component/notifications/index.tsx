@@ -59,25 +59,25 @@ const NotificationPopover: React.FC<NotificationPopoverProps> = ({
           ...friendSnapshots.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
           ...userSnapshots.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
         ];
-  
+
         const enrichedNotifications = await Promise.all(
           notificationsList.map(async (notification) => {
             const friendRef = doc(db, "user", notification.friend_id);
             const userRef = doc(db, "user", notification.user_id);
+
+          const [friendDoc, userDoc] = await Promise.all([
+            getDoc(friendRef),
+            getDoc(userRef),
+          ]);
   
-            const [friendDoc, userDoc] = await Promise.all([
-              getDoc(friendRef),
-              getDoc(userRef),
-            ]);
-  
-            return {
+          return {
               ...notification,
-              friend: friendDoc.exists() ? friendDoc.data() : null,
-              user: userDoc.exists() ? userDoc.data() : null,
-            };
+            friend: friendDoc.exists() ? friendDoc.data() : null,
+            user: userDoc.exists() ? userDoc.data() : null,
+          };
           })
         );
-  
+
         // Veriyi state'e ve localStorage'a kaydediyoruz
         setNotifications(enrichedNotifications);
         localStorage.setItem("notifications", JSON.stringify(enrichedNotifications));
@@ -85,7 +85,7 @@ const NotificationPopover: React.FC<NotificationPopoverProps> = ({
         console.error("Error fetching notifications:", error);
       }
     };
-  
+
     // İlk yüklemede localStorage'dan veriyi çekiyoruz
     const storedNotifications = localStorage.getItem("notifications");
     if (storedNotifications) {
