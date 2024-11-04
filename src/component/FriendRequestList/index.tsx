@@ -72,7 +72,19 @@ const FriendRequestList = () => {
         user_id: userId,
         created_at: new Date(),
       });
-
+      await addDoc(collection(db, "user", userId, "notification"), {
+        friend_id: friendId,
+        user_id: userId,
+        created_at: new Date(),
+      });
+  
+      // Gönderenin friends koleksiyonuna arkadaş kaydını ekle
+      await addDoc(collection(db, "user", friendId, "notification"), {
+        friend_id: userId,
+        user_id: friendId,
+        created_at: new Date(),
+      });
+  
       setSentRequests((prev) => [...prev, friendId]);
     } catch (error) {
       console.error("Arkadaşlık isteği gönderilirken hata oluştu:", error);

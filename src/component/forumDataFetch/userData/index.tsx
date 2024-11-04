@@ -30,8 +30,8 @@ const UserData = ({ userId }: { userId: string }) => {
     <div>
       {userData ? (
         <div className={styles.topInfo}>
-         <div>{userData.userNickname}</div> 
-          <div><img  className={styles.topPhoto} src={userData.userProfilePictures} width={100} height={100} /></div>
+         <div>{userData?.userNickname}</div> 
+          <div><img  className={styles.topPhoto} src={userData?.userProfilePictures} width={100} height={100} /></div>
         </div>
       ) : (
         <div></div>

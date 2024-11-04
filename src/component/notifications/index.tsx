@@ -2,13 +2,13 @@
 import React, { useRef, useEffect, useState } from "react";
 import styles from "./notifications.module.css";
 import {
+  addDoc,
   collection,
   doc,
   getDoc,
   getDocs,
   getFirestore,
-  query,
-  where,
+  deleteDoc,
 } from "firebase/firestore";
 import { app } from "@/app/layout";
 import { getAuth } from "firebase/auth";
@@ -33,6 +33,7 @@ const NotificationPopover: React.FC<NotificationPopoverProps> = ({
   const db = getFirestore(app);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const auth = getAuth(app);
+  const [notList, setNotList] = useState<any>([]);
 
   const handleClickOutside = (event: MouseEvent) => {
     if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
@@ -44,37 +45,32 @@ const NotificationPopover: React.FC<NotificationPopoverProps> = ({
     const fetchNotifications = async () => {
       const userId = auth.currentUser?.uid;
       if (!userId) return;
-  
-      const notificationRef = collection(db, "notification");
-      const friendQuery = query(notificationRef, where("friend_id", "==", userId));
-      const userQuery = query(notificationRef, where("user_id", "==", userId));
-  
       try {
-        const [friendSnapshots, userSnapshots] = await Promise.all([
-          getDocs(friendQuery),
-          getDocs(userQuery),
-        ]);
-  
-        const notificationsList = [
-          ...friendSnapshots.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
-          ...userSnapshots.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
-        ];
+        const notificationsRef = collection(db, "user", userId, "notification");
+        console.log(notificationsRef, 'notificationsRef');
+        const notificationsSnapshot = await getDocs(notificationsRef);
+
+        const notificationsList = notificationsSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Notification[];
+        setNotList(notificationsList);
 
         const enrichedNotifications = await Promise.all(
           notificationsList.map(async (notification) => {
             const friendRef = doc(db, "user", notification.friend_id);
             const userRef = doc(db, "user", notification.user_id);
 
-          const [friendDoc, userDoc] = await Promise.all([
-            getDoc(friendRef),
-            getDoc(userRef),
-          ]);
-  
-          return {
+            const [friendDoc, userDoc] = await Promise.all([
+              getDoc(friendRef),
+              getDoc(userRef),
+            ]);
+
+            return {
               ...notification,
-            friend: friendDoc.exists() ? friendDoc.data() : null,
-            user: userDoc.exists() ? userDoc.data() : null,
-          };
+              friend: friendDoc.exists() ? { uid: friendDoc.id, ...friendDoc.data() } : null,
+              user: userDoc.exists() ? { uid: userDoc.id, ...userDoc.data() } : null,
+            };
           })
         );
 
@@ -91,10 +87,9 @@ const NotificationPopover: React.FC<NotificationPopoverProps> = ({
     if (storedNotifications) {
       setNotifications(JSON.parse(storedNotifications));
     } else {
-      fetchNotifications();
+      fetchNotifications(); // Burada fetchNotifications çağrılıyor
     }
-  }, [db]);
-  
+  }, [db, auth.currentUser]); // Bağımlılıklara auth.currentUser eklendi
 
   useEffect(() => {
     if (open) {
@@ -107,30 +102,66 @@ const NotificationPopover: React.FC<NotificationPopoverProps> = ({
     };
   }, [open]);
 
+  const requestAccept = async (notificationId: string, senderId: string) => {
+    const userId = auth.currentUser?.uid;
+    console.log(userId, 'userId');
+    console.log(senderId, 'senderId');
+    if (!userId) {
+      console.error("Kullanıcı oturumu açık değil.");
+      return;
+    }
+
+    try {
+      // İlk olarak kendi friends koleksiyonuna arkadaş kaydını ekle
+      await addDoc(collection(db, "user", userId, "friends"), {
+        friend_id: senderId,
+        user_id: userId,
+        created_at: new Date(),
+      });
+
+      // Gönderenin friends koleksiyonuna arkadaş kaydını ekle
+      await addDoc(collection(db, "user", senderId, "friends"), {
+        friend_id: userId,
+        user_id: senderId,
+        created_at: new Date(),
+      });
+
+      // Bildirimi kullanıcının notifications alt koleksiyonundan sil
+      const notificationRef = doc(db, "user", userId, "notification", notificationId);
+      await deleteDoc(notificationRef);
+
+      console.log("Arkadaşlık isteği başarıyla kabul edildi ve kaydedildi.");
+    } catch (error) {
+      console.error("Arkadaşlık isteği kabul edilirken hata oluştu:", error);
+    }
+  };
+
+  console.log(notifications, 'notifications');
+  console.log(notList, 'notList');
+
   return (
     <div className={styles.popoverContainer} ref={popoverRef}>
       {open && (
         <div className={styles.popoverContent}>
           {notifications.length > 0 ? (
             notifications.map((notification) =>
-              notification.friend?.uid !== auth.currentUser?.uid ? (
-                <div
-                  key={notification.friend?.userName}
-                  className={styles.notificationItem}
-                >
+              notification.user?.uid !== auth.currentUser?.uid ? (
+                <div className={styles.notificationItem} key={notification.id}>
                   <p className={styles.notificationText}>
-                    {`${notification.friend?.userName} kişisine arkadaşlık isteği gönderdiniz.`}
+                    {`${notification.user?.userName} kişisine arkadaşlık isteği gönderdiniz.`}
                   </p>
                 </div>
               ) : (
-                <div
-                  key={notification.user?.userName}
-                  className={styles.notificationItem}
-                >
+                <div className={styles.notificationItem} key={notification.id}>
                   <p className={styles.notificationText}>
-                    {`${notification.user?.userName} kişisinden arkadaşlık isteği aldınız.`}
+                    {`${notification.friend?.userName} kişisinden arkadaşlık isteği aldınız.`}
                   </p>
-                  <button className={styles.acceptButton}>Kabul et</button>
+                  <button
+                    className={styles.acceptButton}
+                    onClick={() => requestAccept(notification.id, notification.friend_id)}
+                  >
+                    Kabul et
+                  </button>
                   <button className={styles.rejectButton}>Reddet</button>
                 </div>
               )
