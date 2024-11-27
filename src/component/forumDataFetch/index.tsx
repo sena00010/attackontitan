@@ -58,7 +58,6 @@ export default function ForumDataFetch() {
   return (
     <div className={styles.main}>
       <ForumTopSide  profilePicture={""}/>
-      <div className={styles.container}>
         <PostCreated opened={openPost} setOpenPost={setOpenPost} />
         <UpdatedPost
           selectedPost={selectedPost}
@@ -94,7 +93,6 @@ export default function ForumDataFetch() {
             </div>
           </div>
         ))}
-      </div>
       <div>
         <button onClick={() => setOpenPost(true)} className={styles.postImage}>
           oluştur

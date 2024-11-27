@@ -4,17 +4,19 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background: linear-gradient(90deg, rgba(255,0,150,1) 0%, rgba(0,204,255,1) 100%);
+    background: linear-gradient(90deg, rgb(210, 184, 77) 0%, rgb(149, 225, 168) 100%);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
   }
 
   .notificationButton{
-    background: linear-gradient(90deg, rgba(255,0,150,1) 0%,rgb(184, 113, 154) 100%);
+    background: linear-gradient(90deg, rgb(210, 184, 77) 0%, rgb(149, 225, 168) 100%);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     padding: 10px 5px;
     border:0.5px solid linear-gradient(90deg, rgb(110, 37, 80) , rgba(255,0,150,1) 0%, rgb(184, 113, 154) 100%);
+    background: linear-gradient(90deg, rgb(210, 184, 77) 0%, rgb(149, 225, 168) 100%);
+
     color:white;
   }
   

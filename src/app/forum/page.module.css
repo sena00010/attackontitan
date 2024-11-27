@@ -1,3 +1,18 @@
-.container{
-    height: 100vh;
-}
+.container {
+    display: grid;
+    grid-template-columns: 1fr 2.5fr 1.2fr;
+    gap: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #fef6e4, #fde9d4);
+    min-height: 100vh;
+  }
+  
+  .leftPanel,
+  .mainContent,
+  .rightPanel {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+  
