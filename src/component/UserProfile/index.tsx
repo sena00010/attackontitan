@@ -9,8 +9,8 @@ import { log } from "console";
 
 const UserProfile = () => {
   const [data, setData] = useState<any | null>(null);
-  const [userFriendData, setUserFriendData] = useState<any | null>(null);
-  console.log(userFriendData,'userFriendData')
+  const [friends, setFriends] = useState<any[]>([]);
+  const [notifications, setNotifications] = useState<any[]>([]);
   const [editMode, setEditMode] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -33,22 +33,89 @@ const UserProfile = () => {
   const fetchUserFriendsData = async (userId: string) => {
     try {
       const userDoc = doc(db, "user", userId);
-      const friendsList=collection(userDoc,'friends');
-      const friendsSnapshot = await getDocs(friendsList);
+      const friendsCollection = collection(userDoc, "friends");
+      const friendsSnapshot = await getDocs(friendsCollection);
+  
+      console.log("Friends Snapshot:", friendsSnapshot);
+  
       if (!friendsSnapshot.empty) {
-        const friendsList = friendsSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setUserFriendData(friendsList);
+        const friendsData = await Promise.all(
+          friendsSnapshot.docs.map(async (friendDoc) => {
+            console.log("Friend Doc Data:", friendDoc.data());
+            const friendId = friendDoc.data().friend_id;
+            if (!friendId) {
+              console.error("Missing friend_id in friends document.");
+              return null;
+            }
+  
+            const friendRef = doc(db, "user", friendId);
+            const friendSnapshot = await getDoc(friendRef);
+  
+            if (friendSnapshot.exists()) {
+              console.log("Friend Snapshot:", friendSnapshot.data());
+              return { id: friendSnapshot.id, ...friendSnapshot.data() };
+            } else {
+              console.error(`Friend with ID ${friendId} not found in user collection.`);
+              return null;
+            }
+          })
+        );
+  
+        setFriends(friendsData.filter((friend) => friend !== null)); // Geçerli arkadaşları ekle
       } else {
-        console.error("No friends found");
+        console.error("No friends found in friends collection.");
       }
     } catch (error) {
       console.error("Error fetching user friends:", error);
     }
   };
+  
+  
+  const fetchUserNotificationsData = async (userId: string) => {
+    try {
+      const userDoc = doc(db, "user", userId);
+      const notificationsCollection = collection(userDoc, "notification");
+      console.log("Fetching notifications collection...");
+      const notificationsSnapshot = await getDocs(notificationsCollection);
+  
+      if (!notificationsSnapshot.empty) {
+        const notificationsData = await Promise.all(
+          notificationsSnapshot.docs.map(async (doc) => {
+            const data = doc.data();
+            console.log("Notification Data:", data);
+  
+            const friendRef = doc(db, "user", data.friend_id); // friend_id kullanarak kullanıcıyı bul
+            const friendSnapshot = await getDoc(friendRef);
+  
+            if (friendSnapshot.exists()) {
+              console.log("Friend Details Found:", friendSnapshot.data());
+            } else {
+              console.error(`Friend with ID ${data.friend_id} not found.`);
+            }
+  
+            const friendDetails = friendSnapshot.exists()
+              ? { id: friendSnapshot.id, ...friendSnapshot.data() }
+              : null;
+  
+            return {
+              id: doc.id,
+              ...data,
+              friendDetails, // İlgili kullanıcı bilgilerini ekle
+              isSender: data.user_id === userId, // Gönderen ben miyim?
+            };
+          })
+        );
+        setNotifications(notificationsData);
+      } else {
+        console.error("No notifications found.");
+      }
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    }
+  };
+  
 
+console.log(notifications,"vnotificationsnotificationsnotificationsnotifications");
   const updateUserData = async () => {
     const userDoc = doc(db, "user", data.id);
     await updateDoc(userDoc, { ...data });
@@ -61,12 +128,16 @@ const UserProfile = () => {
     await deleteDoc(userDoc);
   };
 
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        fetchUserData(user.uid);
-      } else {
+        fetchUserData(user.uid); // Kullanıcı bilgilerini getir
+        fetchUserFriendsData(user.uid); // Arkadaş listesini getir
+        fetchUserNotificationsData(user.uid);
+            } else {
         setData(null);
+        setFriends([]); // Arkadaş listesini temizle
       }
     });
 
@@ -79,6 +150,28 @@ const UserProfile = () => {
 
   return (
     <div className={styles.main}>
+        <div className={styles.sideDiv}>
+        <h3>Friends List</h3>
+        {friends.length > 0 ? (
+          <ul>
+            {friends.map((friend) => (
+              <li key={friend.id} className={styles.friendItem}>
+                <div className={styles.friendProfilePicture}>
+                  {friend.userProfilePictures ? (
+                    <img  src={friend.userProfilePictures} alt={friend.userName} />
+                  ) : (
+                    <div className={styles.placeholderPicture}></div>
+                  )}
+                </div>
+                <p>{friend.userName}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No friends found.</p>
+        )}
+        <p>Total Friends: {friends.length}</p>
+      </div>
       <div className={styles.profileContainer}>
         <div className={styles.profilePicture}>
           {data.userProfilePictures === "" ? (
@@ -143,15 +236,51 @@ const UserProfile = () => {
               <p>Favorite Mangas: {data.favoriteMangas}</p>
               <p>Hobbies: {data.userHobbies}</p>
               <p>Info: {data.userInfo}</p>
-              <span>{userFriendData}</span>
             </>
-
           )}
           <button className={styles.button} onClick={() => setEditMode(!editMode)}>{editMode ? "Cancel" : "Edit"}</button>
           <button className={styles.button} onClick={() => setShowDeleteModal(true)}>Delete Account</button>
         </div>
       </div>
-
+      <div className={styles.sideDiv}>
+  <h3>Notifications</h3>
+  {notifications.length > 0 ? (
+    <ul>
+      {notifications.map((notification) => (
+        <li key={notification.id}>
+          {notification.isSender ? (
+            <>
+              {/* İstek gönderilen kullanıcıyı bul */}
+              <p>
+                You sent a request to{" "}
+                <strong>
+                  {notification.friendDetails?.userName}{" "}
+                  {notification.friendDetails?.userLastName}
+                </strong>{" "}
+                on {new Date(notification.created_at).toLocaleDateString()}.
+              </p>
+            </>
+          ) : (
+            <>
+              {/* İstek gönderen kullanıcıyı bul */}
+              <p>
+                <strong>
+                  {notification.friendDetails?.userName}{" "}
+                  {notification.friendDetails?.userLastName}
+                </strong>{" "}
+                sent you a request on{" "}
+                {new Date(notification.created_at).toLocaleDateString()}.
+              </p>
+            </>
+          )}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p>No notifications found.</p>
+  )}
+</div>
+  
       {showSaveModal && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
@@ -160,7 +289,7 @@ const UserProfile = () => {
           </div>
         </div>
       )}
-
+  
       {showDeleteModal && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
@@ -172,6 +301,7 @@ const UserProfile = () => {
       )}
     </div>
   );
+  
 };
 
 export default UserProfile;

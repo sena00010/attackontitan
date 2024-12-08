@@ -4,6 +4,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { initializeApp } from "firebase/app";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 interface PostCreatedProps {
   opened: boolean;
@@ -28,25 +29,42 @@ export default function PostCreated({ opened, setOpenPost }: PostCreatedProps) {
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+  const auth = getAuth();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    // Kullanıcı kimliği ve oluşturulma zamanı ekleniyor
+    const userId = auth.currentUser?.uid || "anonymous"; // Giriş yapılmamışsa 'anonymous' olarak ayarla
+    const createdAt = new Date().toISOString(); // ISO formatında tarih
+
     const sendPost = {
       postContent: { text: text, image: photo },
+      userId: userId,
+      createdAt: createdAt,
     };
+
     try {
       const postDoc = await addDoc(collection(db, "post"), sendPost);
-      console.log("Proje ID'si: ", postDoc.id);
+      console.log("Post ID'si: ", postDoc.id);
     } catch (e) {
-      console.error("Proje eklenirken hata oluştu: ", e);
+      console.error("Post eklenirken hata oluştu: ", e);
     }
+
+    // Formu sıfırla ve modalı kapat
+    setText("");
+    setPhoto("");
     setOpenPost(false);
   };
 
   return opened ? (
     <div className={styles.overlay}>
       <div className={styles.container}>
-        <FontAwesomeIcon icon={faXmark} onClick={() => setOpenPost(false)} />
+        <FontAwesomeIcon
+          icon={faXmark}
+          onClick={() => setOpenPost(false)}
+          className={styles.closeIcon}
+        />
         <form className={styles.form} onSubmit={handleSubmit}>
           <input
             className={styles.textAreaInput}

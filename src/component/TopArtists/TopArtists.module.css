@@ -10,6 +10,9 @@
   }
   
   .list {
+    display: flex;
+    flex-direction: column;
+    gap:20px;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -20,7 +23,7 @@
     align-items: center;
     gap: 10px;
     padding: 10px;
-    background: linear-gradient(90deg, rgb(210, 184, 77) 0%, rgb(149, 225, 168) 100%);
+    background: linear-gradient(90deg, rgb(210, 184, 77) 0%, #edb33e);
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
