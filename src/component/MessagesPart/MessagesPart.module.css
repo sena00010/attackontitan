@@ -1,173 +1,122 @@
-.appContainer {
-  display: flex;
-  height: 100vh;
-}
-
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  width: 30%;
-  height: 100vh;
-  background: linear-gradient(270deg, rgb(149, 112, 204) 0%, rgba(0,204,255,1) 100%);
-  border-right: 1px solid #e0e0e0;
-  overflow-y: auto;
-}
-
-.sidebarHeader {
-  padding: 25px;
-  background: linear-gradient(90deg, rgb(138, 94, 159) 0%, rgba(0,204,255,1) 100%);
-  color: white;
-  font-size: 1.2rem;
-  font-weight: bold;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.chatsList {
-  padding: 10px;
-  overflow-y: auto;
-}
-
-.chatItem {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 12px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.chatItem:hover {
-  background-color: #ebebeb;
-}
-
-.chatImage {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 15px;
-}
-
-.chatDetails {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.chatName {
-  font-size: 16px;
-  font-weight: 500;
-  color: #333;
-}
-
-.chatPreview {
-  font-size: 14px;
-  color: #666;
-  margin-top: 5px;
-}
-
-.chatTime {
-  margin-left: auto;
-  font-size: 12px;
-  color: #999;
-}
-
-.chatsList {
-  flex: 1;
-  overflow-y: auto;
-  padding: 10px;
-}
-
-.chatItem {
-  padding: 15px;
-  border-bottom: 1px solid #ddd;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.chatItem:hover {
-  background-color: #e6e6e6;
-}
-
 .chatWindow {
-  width: 75%;
+  flex: 1;
   display: flex;
   flex-direction: column;
+  margin: 20px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .chatHeader {
   display: flex;
-  flex-direction: row;
-  gap:20px;
-  padding: 20px;
-  background: linear-gradient(270deg, rgb(149, 112, 204) 0%, rgba(0,204,255,1) 100%);
-  border-bottom: 1px solid #ccc;
-  font-size: 1.2rem;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  background-color: #f5f5f5;
+  position: sticky; /* Başlığı sabit tut */
+  top: 0; /* Üstte sabitle */
+  z-index: 10; /* Üstte görünmesini sağla */
+}
+
+.chatHeader h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.profileRoomPicture {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-right: 15px;
 }
 
 .messagesContainer {
   flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-  background: linear-gradient(270deg, rgb(149, 112, 204) 0%, rgba(0,204,255,1) 100%);
+  overflow-y: auto; /* Scroll ekle */
+  padding: 10px; /* Mesajlar için iç boşluk */
+  max-height: 550px;
+  min-height: 550px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Mesajlar arasına boşluk */
+  background: #f9f9f9; /* Mesaj alanı arka plan rengi */
 }
 
 .message {
-  margin-bottom: 15px;
-}
-
-.messageHeader {
   display: flex;
-  align-items: center;
-  margin-bottom: 5px;
-}
-
-.profilePicture {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-.profileRoomPicture {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-}
-
-.messageContent {
+  align-items: flex-start;
+  gap: 10px;
   padding: 10px 15px;
-  background-color: #fff;
-  border-radius: 10px;
-  max-width: 60%;
+  border-radius: 12px;
+  font-size: 16px;
+  line-height: 1.5;
+  word-wrap: break-word; /* Uzun kelimeleri taşır */
+  max-width: 80%; /* Mesaj baloncuklarının maksimum genişliği */
 }
 
-.messageTimestamp {
-  font-size: 0.8rem;
-  color: #888;
-  margin-top: 5px;
+.messageSender {
+  align-self: flex-end;
+  background: #fce4cb;
+  color: #333;
+}
+
+.messageReceiver {
+  align-self: flex-start;
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  color: #333;
+}
+
+.messageProfile {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .inputContainer {
   display: flex;
-  padding: 15px;
-  background: linear-gradient(270deg, rgb(149, 112, 204) 0%, rgba(0,204,255,1) 100%);
+  align-items: center;
+  padding: 20px;
+  background: #fff;
+  border-top: 1px solid #ddd;
 }
 
 .inputField {
   flex: 1;
-  padding: 10px;
-  border-radius: 20px;
+  padding: 10px 15px;
+  border-radius: 12px;
   border: 1px solid #ddd;
-  margin-right: 10px;
+  font-size: 16px;
 }
 
 .sendButton {
-  background-color: #25d366;
-  color: white;
-  border: none;
+  margin-left: 10px;
   padding: 10px 20px;
-  border-radius: 20%;
+  background: #fce4cb;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
   cursor: pointer;
+  color: #333;
+  transition: background 0.2s ease;
+}
+
+.sendButton:hover {
+  background: #fbd2a8;
+}
+
+.talkerImage {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.talkerName {
+  font-size: 18px;
+  font-weight: bold;
 }

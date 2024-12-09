@@ -1,61 +1,128 @@
-/* styles.module.css */
-
+/* Global styles */
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    background: linear-gradient(to right, #f7f7f7, #ece9e6);
-  }
-  
-  .title {
-    text-align: center;
-    margin: 20px 0;
-    color: #555;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  .roomList {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-  }
-  
-  .roomItem {
-    display: flex;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .roomItem:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  .roomImage {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 15px;
-    border: 2px solid #ddd;
-  }
-  
-  .roomName {
-    font-size: 16px;
-    color: #333;
-    margin: 0;
-    text-transform: capitalize;
-  }
-  
-  .roomPreview {
-    font-size: 14px;
-    color: #888;
-  }
-  
+  display: flex;
+  height: 100vh;
+  background: #fef7ec;
+}
+
+.sidebar {
+  width: 25%;
+  background: #fff;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 15px;
+  overflow-y: auto;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.roomList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.roomItem {
+  display: flex;
+  align-items: center;
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.roomItem:hover {
+  background: #fce4cb;
+  transform: translateY(-2px);
+}
+
+.roomImage {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+  border: 2px solid #f0f0f0;
+}
+
+.roomName {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+}
+
+.roomPreview {
+  font-size: 14px;
+  color: #777;
+}
+.container {
+  display: flex;
+}
+
+.sidebar {
+  width: 25%;
+  border-right: 1px solid #ccc;
+  padding: 10px;
+}
+.messageArea {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto; /* Dikey scroll için */
+  max-height: calc(100vh - 20px); /* Yüksekliği ekranın tamamı kadar yap */
+  border-left: 1px solid #ddd; /* Sol tarafa ayırıcı bir çizgi ekleyebilirsiniz */
+  background-color: #f9f9f9; /* Arka plan rengi */
+}
+
+.messagesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Mesajlar arasında boşluk */
+}
+
+
+.emptyMessageArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #888;
+}
+
+.roomItem {
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  transition: background-color 0.2s ease;
+}
+
+.roomItem:hover {
+  background-color: #f0f0f0;
+}
+
+.selectedRoom {
+  background-color: #e0e0e0;
+}
+/* Scroll bar stili */
+.messageArea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.messageArea::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+.messageArea::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}

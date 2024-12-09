@@ -14,12 +14,15 @@ import {
   getFirestore,
   doc,
   getDoc,
+  addDoc,
 } from "firebase/firestore";
 import { app } from "@/app/layout";
 import ForumTopSide from "../ForumTopSide";
 import PostCreated from "@/component/createPost";
 import UpdatedPost from "../UpdatedPost";
 import DeletePost from "../deletePost";
+import { getAuth } from "firebase/auth";
+import { timeStamp } from "console";
 
 export default function ForumDataFetch() {
   const [posts, setPosts] = useState<any[]>([]);
@@ -100,6 +103,37 @@ export default function ForumDataFetch() {
     return postDate.toLocaleDateString("tr-TR");
   };
 
+  const handleLike = async (postId: string) => {
+    try {
+      const userId = getAuth(app).currentUser?.uid;
+      const getLikedPost = doc(db, "post", postId);
+      const likesCollection = collection(getLikedPost, "likes");
+      const timeStamp = new Date().toISOString();
+  
+      await addDoc(likesCollection, {
+        userId,
+        timeStamp,
+      });
+  
+      const likedPostData = await getDoc(getLikedPost);
+      const postData = likedPostData.data();
+      const postOwnerId = postData?.userId;
+  
+      const notificationsRef = collection(db, "user", postOwnerId, "notification");
+      await addDoc(notificationsRef, {
+        friend_id: userId,
+        user_id: postOwnerId,
+        notificationsType: "like",
+        created_at: timeStamp,
+      });
+  
+      console.log("Like ve notification başarıyla eklendi!");
+    } catch (error) {
+      console.error("Like eklenirken bir hata oluştu:", error);
+    }
+  };
+  
+
   return (
     <div className={styles.main}>
       <ForumTopSide profilePicture={""} />
@@ -138,7 +172,7 @@ export default function ForumDataFetch() {
             </div>
             <div className={styles.postActions}>
               <button className={`${styles.actionButton} like`}>
-                <FontAwesomeIcon icon={faHeart} />
+                <FontAwesomeIcon icon={faHeart} onClick={()=>handleLike(post?.id)}/>
               </button>
               <button className={`${styles.actionButton} comment`}>
                 <FontAwesomeIcon icon={faComment} />
