@@ -150,36 +150,47 @@ const NotificationPopover: React.FC<NotificationPopoverProps> = ({
 
   console.log(notifications, "notifications");
   console.log(notList, "notList");
-
   return (
     <div className={styles.popoverContainer} ref={popoverRef}>
       {open && (
         <div className={styles.popoverContent}>
           {notifications.length > 0 ? (
-            notifications.map((notification) =>
-              notification.user?.uid !== auth.currentUser?.uid ? (
-                <div className={styles.notificationItem} key={notification.id}>
-                  <p className={styles.notificationText}>
-                    {`${notification.friend?.userName} kişisine arkadaşlık isteği gönderdiniz.`}
-                  </p>
-                </div>
-              ) : (
-                <div className={styles.notificationItem} key={notification.id}>
-                  <p className={styles.notificationText}>
-                    {`${notification.friend?.userName} kişisinden arkadaşlık isteği aldınız.`}
-                  </p>
-                  <button
-                    className={styles.acceptButton}
-                    onClick={() =>
-                      requestAccept(notification.id, notification.friend_id)
-                    }
-                  >
-                    Kabul et
-                  </button>
-                  <button className={styles.rejectButton}>Reddet</button>
-                </div>
-              )
-            )
+            notifications.map((notification) => {
+              if (notification.notificationsType === "like") {
+                return (
+                  <div className={styles.notificationItem} key={notification.id}>
+                    <p className={styles.notificationText}>
+                      {`${notification.friend?.userName} gönderinizi beğendi.`}
+                    </p>
+                  </div>
+                );
+              } else if (notification.user?.uid !== auth.currentUser?.uid) {
+                return (
+                  <div className={styles.notificationItem} key={notification.id}>
+                    <p className={styles.notificationText}>
+                      {`${notification.friend?.userName} kişisine arkadaşlık isteği gönderdiniz.`}
+                    </p>
+                  </div>
+                );
+              } else {
+                return (
+                  <div className={styles.notificationItem} key={notification.id}>
+                    <p className={styles.notificationText}>
+                      {`${notification.friend?.userName} kişisinden arkadaşlık isteği aldınız.`}
+                    </p>
+                    <button
+                      className={styles.acceptButton}
+                      onClick={() =>
+                        requestAccept(notification.id, notification.friend_id)
+                      }
+                    >
+                      Kabul et
+                    </button>
+                    <button className={styles.rejectButton}>Reddet</button>
+                  </div>
+                );
+              }
+            })
           ) : (
             <p className={styles.noNotificationText}>Hiç bildirim yok</p>
           )}
@@ -187,6 +198,7 @@ const NotificationPopover: React.FC<NotificationPopoverProps> = ({
       )}
     </div>
   );
+  
 };
 
 export default NotificationPopover;

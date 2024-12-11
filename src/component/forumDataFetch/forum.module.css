@@ -101,3 +101,51 @@
   transform: scale(1.05);
   background: linear-gradient(90deg, #ff758c, #ff7eb3);
 }
+.commentForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.commentInput {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  resize: none;
+  transition: border-color 0.3s ease;
+}
+
+.commentInput:focus {
+  border-color: #1e90ff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(30, 144, 255, 0.5);
+}
+
+.commentButton {
+  align-self: flex-end;
+  background: #1e90ff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.commentButton:disabled {
+  background: #ddd;
+  cursor: not-allowed;
+}
+
+.commentButton:hover:not(:disabled) {
+  background: #1c86ee;
+  transform: scale(1.05);
+}
