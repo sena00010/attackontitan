@@ -149,3 +149,55 @@
   background: #1c86ee;
   transform: scale(1.05);
 }
+.comments {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #f9f9f9; /* Arka planı hafif bir gri yapar */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge ekler */
+}
+
+.comment {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px; /* Profil fotoğrafı ve içerik arasında boşluk */
+  margin-bottom: 15px; /* Yorumlar arasında boşluk */
+  padding: 10px;
+  border: 1px solid #e0e0e0; /* Yorum kutusunun kenarlarını belirginleştirir */
+  border-radius: 6px;
+  background-color: #ffffff;
+}
+
+.commentUserImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* Fotoğrafı yuvarlak yapar */
+  object-fit: cover;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge ekler */
+}
+
+.commentUsername {
+  font-weight: bold;
+  color: #333;
+}
+
+.commentText {
+  margin-top: 4px;
+  font-size: 14px;
+  color: #555;
+}
+
+.commentTime {
+  color: #999;
+  margin-top: 4px;
+  align-self: flex-end; /* Tarihi sağ alt köşeye yerleştirir */
+}
+
+.comment span {
+  display: block; /* Tüm metinleri satır bazında hizalar */
+}
+
+.comment:last-child {
+  margin-bottom: 0; /* Son yorumun altında ekstra boşluk bırakmaz */
+}
+

@@ -42,6 +42,8 @@ export default function PostCreated({ opened, setOpenPost }: PostCreatedProps) {
       postContent: { text: text, image: photo },
       userId: userId,
       createdAt: createdAt,
+      selfReaction:false,
+      likeCount:0,
     };
 
     try {

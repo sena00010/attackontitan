@@ -15,6 +15,8 @@ import {
   doc,
   getDoc,
   addDoc,
+  updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { app } from "@/app/layout";
 import ForumTopSide from "../ForumTopSide";
@@ -31,8 +33,7 @@ export default function ForumDataFetch() {
   const [openPost, setOpenPost] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [selectedPost, setSelectedPost] = useState<any>(null);
-  const [likesCount, setLikesCount] = useState<{ [key: string]: number }>({});
-  const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
+  const [likedPosts, setLikedPosts] = useState<boolean>(false);
   const [commentText, setCommentText] = useState("");
   const [showComments, setShowComments] = useState<{ [key: string]: boolean }>(
     {}
@@ -53,17 +54,6 @@ export default function ForumDataFetch() {
     }
   };
 
-  const fetchLikesCount = async (postId: string) => {
-    try {
-      const postRef = doc(db, "post", postId);
-      const likesCollection = collection(postRef, "likes");
-      const likesSnapshot = await getDocs(likesCollection);
-      return likesSnapshot.size; // Like sayısını döner
-    } catch (error) {
-      console.error("Error fetching likes count:", error);
-      return 0;
-    }
-  };
 
   const fetchComments = async (postId: string) => {
     try {
@@ -87,32 +77,25 @@ export default function ForumDataFetch() {
       const postSnapshot = await getDocs(postsCol);
       const postList = await Promise.all(
         postSnapshot.docs.map(async (doc) => {
-          const likes = await fetchLikesCount(doc.id);
           await fetchComments(doc.id);
           return {
             id: doc.id,
             ...doc.data(),
-            likes,
           };
         })
       );
       setPosts(postList);
-
-      // Likes count güncellemesi
-      const likesData: { [key: string]: number } = {};
-      postList.forEach((post) => {
-        likesData[post.id] = post.likes || 0;
-      });
-      setLikesCount(likesData);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
+
+
   };
 
   useEffect(() => {
     fetchUsers(); // İlk olarak kullanıcı verilerini çek
     fetchPosts(); // Sonrasında postları çek
-  }, []);
+  }, [likedPosts]);
 
   // openPost değiştiğinde tetiklenir
   useEffect(() => {
@@ -179,36 +162,42 @@ export default function ForumDataFetch() {
 
       const postRef = doc(db, "post", postId);
       const likesCollection = collection(postRef, "likes");
-
-      // Kullanıcının zaten beğeni atıp atmadığını kontrol et
       const querySnapshot = await getDocs(likesCollection);
-      const alreadyLiked = querySnapshot.docs.some(
+      const alreadyLiked = querySnapshot.docs.find(
         (doc) => doc.data().userId === userId
       );
-
-      if (alreadyLiked) {
-        console.log("Bu gönderiye zaten like atılmış!");
-        return;
+       console.log(alreadyLiked,'alreadyLiked')
+      if (alreadyLiked) {  
+        await deleteDoc(doc(likesCollection, alreadyLiked.id));
+      }else{
+        const timeStamp = new Date().toISOString();
+        await addDoc(likesCollection, {
+          userId,
+          timeStamp,
+        });
       }
-
-      const timeStamp = new Date().toISOString();
-
-      // Like ekle
-      await addDoc(likesCollection, {
-        userId,
-        timeStamp,
-      });
-
-      // State'i güncelle
-      setLikedPosts((prev) => ({
-        ...prev,
-        [postId]: true, // Bu post artık beğenildi
-      }));
-
+      const postSnap = await getDoc(postRef);
+      if (postSnap.exists()) {
+        const data = postSnap.data();
+     
+        const likesCollection2 = collection(postRef, "likes");
+        const querySnapshot2 = await getDocs(likesCollection2);
+        const selfReaction= querySnapshot2.docs.some(
+          (doc) => doc.data().userId === userId
+        );
+        const newLikeCount =selfReaction? (data.likeCount || 0) +1:(data.likeCount || 0) -1;
+      
+        await updateDoc(postRef, {
+          likeCount: newLikeCount,
+          selfReaction:selfReaction,
+        });
+      }
+      
       console.log("Like başarıyla eklendi!");
     } catch (error) {
       console.error("Like eklenirken bir hata oluştu:", error);
     }
+    setLikedPosts(!likedPosts)
   };
   const handleShowComments = (postId: string) => {
     setShowComments((prev) => ({ ...prev, [postId]: !prev[postId] }));
@@ -223,7 +212,6 @@ export default function ForumDataFetch() {
 
         return (
           <div className={styles.main}>
-            <ForumTopSide profilePicture={""} />
             <PostCreated opened={openPost} setOpenPost={setOpenPost} />
             <UpdatedPost
               selectedPost={selectedPost}
@@ -265,12 +253,12 @@ export default function ForumDataFetch() {
                     <button
                       className={`${styles.actionButton} like`}
                       style={{
-                        color: likedPosts[post.id] ? "red" : "black", // Beğenilmişse kırmızı
+                        color: post.selfReaction ? "red" : "black",
                       }}
                       onClick={() => handleLike(post?.id)}
                     >
-                      <FontAwesomeIcon icon={faHeart} />
-                      <span>{likesCount[post.id] || 0} kişi</span>
+                      <FontAwesomeIcon icon={faHeart} onClick={()=>console.log(post.selfReaction,'post.selfReaction')} />
+                      <span>{post.likeCount}</span>
                     </button>
         
                     <button
@@ -280,19 +268,22 @@ export default function ForumDataFetch() {
                       <FontAwesomeIcon icon={faComment} />
                       Yorum Yap
                     </button>
-                
+                   {post.userId===getAuth(app).currentUser?.uid?
                     <button
                       className={`${styles.actionButton} edit`}
                       onClick={() => handleUpdate(post.id)}
                     >
                       <FontAwesomeIcon icon={faPenToSquare} />
                     </button>
+                    :<div></div>}
+                    {post.userId===getAuth(app).currentUser?.uid?
                     <button
                       className={`${styles.actionButton} delete`}
                       onClick={() => handleDelete(post.id)}
                     >
                       <FontAwesomeIcon icon={faTrashCan} />
                     </button>
+                     :<div></div>}
                   </div>
                   {showCommentForm[post.id] && (
                     <div className={styles.commentForm}>

@@ -8,9 +8,10 @@ import styles from "./page.module.css";
 import MessagesPart from "@/component/MessagesPart";
 
 const Rooms = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any>([]);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(null); // Seçili mesaj odası
+  console.log(selectedRoom,'selectedRoom');
   const db = getFirestore(app);
   const auth = getAuth(app);
 
@@ -57,6 +58,7 @@ const Rooms = () => {
         }));
 
         setData(roomsList);
+        console.log(data,'data')
       } catch (error) {
         console.error("Error fetching rooms: ", error);
       }
@@ -64,6 +66,7 @@ const Rooms = () => {
 
     fetchRooms();
   }, [currentUserId]);
+  console.log(data,'dataas')
 
   return (
     <div className={styles.container}>

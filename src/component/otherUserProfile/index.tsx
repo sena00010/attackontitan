@@ -152,7 +152,7 @@ const OtherUserProfile = ({ id, opened }: OtherUserProfileProps) => {
       }
   
       // 4. Odaya yönlendir
-      router.push(`/rooms/${roomId}`);
+      router.push(`/rooms`);
     } catch (error) {
       console.error("Mesaj odası kontrol edilirken veya oluşturulurken hata oluştu:", error);
     }

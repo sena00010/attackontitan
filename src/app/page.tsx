@@ -1,3 +1,5 @@
+import ForumTopSide from "@/component/ForumTopSide";
+
 export default function Home() {
   return (
     <div>

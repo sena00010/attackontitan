@@ -6,6 +6,7 @@ import { useAtom } from "jotai";
 import { userAtom } from "@/atoms/userAtoms";
 import TopArtists from "@/component/TopArtists";
 import PopularPosts from "@/component/PopularPosts";
+import ForumTopSide from "@/component/ForumTopSide";
 export default function ForumPage() {
   const [user, setUser] = useAtom(userAtom);
   // Sayfa yüklendiğinde, localStorage'dan kullanıcıyı çek
@@ -16,7 +17,10 @@ export default function ForumPage() {
     }
   }, []);
   return (
-    <div className={styles.container}>
+<div>         <ForumTopSide profilePicture={""} />
+ <div className={styles.container}>
+                
+
        <div className={styles.leftPanel}>
         <TopArtists />
       </div>
@@ -27,7 +31,8 @@ export default function ForumPage() {
         <PopularPosts />
       </div>
       
-    </div>
+    </div></div>
+  
   );
 }
 ForumPage;

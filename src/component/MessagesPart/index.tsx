@@ -1,21 +1,66 @@
 import React, { useEffect, useState } from "react";
-import { collection, query, orderBy, onSnapshot, addDoc, doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  orderBy,
+  onSnapshot,
+  addDoc,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 import { app } from "../../app/layout";
 import { getFirestore } from "firebase/firestore";
 import styles from "./MessagesPart.module.css";
 import { getAuth } from "firebase/auth";
 
-const MessagesPart = ({ roomId }) => {
+const MessagesPart = ({ roomId }: any) => {
   const db = getFirestore(app);
   const [messages, setMessages] = useState([]);
   const [messageContent, setMessageContent] = useState("");
-  const [talker, setTalker] = useState(null);
   const currentUserId = getAuth(app).currentUser?.uid;
+  const [roomDetails, setRoomDetails] = useState<any>(null); 
+  const [talker,setTalker]=useState<any>(null);
+
+  useEffect(() => {
+    if (!roomId) return;
+  
+    const fetchRoomDetails = async () => {
+      try {
+        const roomDoc = doc(db, "rooms", roomId);
+        const roomSnapshot = await getDoc(roomDoc);
+  
+        if (roomSnapshot.exists()) {
+          const roomData = roomSnapshot.data();
+          setRoomDetails(roomData);
+          const otherUserId = roomData.receiverId; // Direkt roomData'dan al
+  
+          if (otherUserId) {
+            try {
+              const userDoc = doc(db, "user", otherUserId);
+              const userSnapshot = await getDoc(userDoc);
+  
+              if (userSnapshot.exists()) {
+                setTalker(userSnapshot.data()); // Konuşmacıyı güncelle
+              }
+            } catch (error) {
+              console.error("Error fetching user details:", error);
+            }
+          }
+        } else {
+          console.error("Room not found.");
+        }
+      } catch (error) {
+        console.error("Error fetching room details:", error);
+      }
+    };
+  
+    fetchRoomDetails();
+  }, [roomId]);
+  
 
   useEffect(() => {
     if (!roomId) return;
 
-    // Mesajları dinlemek
     const messagesQuery = query(
       collection(db, "rooms", roomId, "messages"),
       orderBy("timestamp", "asc")
@@ -28,20 +73,7 @@ const MessagesPart = ({ roomId }) => {
       }));
 
       setMessages(messages);
-
-      // Karşıdaki kişiyi belirlemek için ilk mesajdan `senderId` alıyoruz
-      const otherUserId = messages.find(
-        (message) => message.senderId !== currentUserId
-      )?.senderId;
-
-      if (otherUserId) {
-        const userDoc = doc(db, "user", otherUserId);
-        const userSnapshot = await getDoc(userDoc);
-
-        if (userSnapshot.exists()) {
-          setTalker(userSnapshot.data());
-        }
-      }
+   
     });
 
     return () => unsubscribe();
@@ -54,7 +86,12 @@ const MessagesPart = ({ roomId }) => {
       await addDoc(collection(db, "rooms", roomId, "messages"), {
         messageContent,
         senderId: currentUserId,
+        receiverId: roomDetails?.receiverId || "unknown",
         timestamp: new Date(),
+        isRead:false,
+        readAt:new Date(),
+        messageType:'text',
+
       });
       setMessageContent("");
     } catch (error) {
@@ -62,21 +99,18 @@ const MessagesPart = ({ roomId }) => {
     }
   };
 
-  console.log(talker,'talker');
-
   return (
     <div className={styles.chatWindow}>
-      {/* Sohbet Odası Başlığı */}
       <div className={styles.chatHeader}>
         <img
           src={talker?.userProfilePictures}
           alt="Profil"
           className={styles.talkerImage}
         />
-        <h2 className={styles.talkerName}>{talker?.userName} ile Sohbet Odasındasınız</h2>
+        <h2 className={styles.talkerName}>
+          {talker?.userName} ile Sohbet Odasındasınız
+        </h2>
       </div>
-  
-      {/* Mesajların Listelendiği Alan */}
       <div className={styles.messagesContainer}>
         {messages.map((message) => {
           const isSender = message.senderId === currentUserId;
@@ -94,8 +128,7 @@ const MessagesPart = ({ roomId }) => {
           );
         })}
       </div>
-  
-      {/* Mesaj Gönderme Alanı */}
+
       <div className={styles.inputContainer}>
         <input
           type="text"
@@ -110,8 +143,6 @@ const MessagesPart = ({ roomId }) => {
       </div>
     </div>
   );
-  
-  
 };
 
 export default MessagesPart;

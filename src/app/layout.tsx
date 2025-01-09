@@ -6,6 +6,7 @@ import { Inter } from "next/font/google";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import "./globals.css";
+import { log } from "console";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,7 +38,7 @@ export default function RootLayout({
       console.log(pathname);
       if ((user && pathname === "/login") || pathname === "/") {
         router.push("/forum");
-      } else if (!user && pathname !== "/login") {
+      } else if (!user && pathname !== "/login" && pathname !== "/register") {
         router.push("/login");
       }
     });
