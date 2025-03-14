@@ -1,203 +1,206 @@
-.main {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.post {
-  background: #fff;
-  margin-bottom: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-}
-
-.userData {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.userData img {
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  margin-right: 10px;
-}
-
-.userData .userInfo {
+.container {
   display: flex;
   flex-direction: column;
+  gap: 20px;
+  padding: 0 15px;
 }
 
-.userData .username {
-  font-weight: bold;
-  font-size: 16px;
-}
-
-.userData .time {
-  font-size: 14px;
-  color: gray;
-}
-
-.postContent {
+.postCard {
+  background-color: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   margin-bottom: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
-.postContent img {
-  border-radius: 10px;
-  max-width: 100%;
-  height: auto;
-  margin-top: 10px;
-}
-
-.postActions {
+.postHeader {
+  padding: 15px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.actionButton {
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 20px;
-  transition: transform 0.3s ease, color 0.3s ease;
-}
-
-.actionButton:hover {
-  transform: scale(1.1);
-}
-
-.actionButton.like {
-  color: #ff4757;
-}
-
-.actionButton.comment {
-  color: #1e90ff;
-}
-
-.actionButton.edit {
-  color: #2ecc71;
-}
-
-.actionButton.delete {
-  color: #e74c3c;
-}
-
-.createPostButton {
-  width: 40%;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: skyblue;
-  cursor: pointer;
-}
-
-.createPostButton:hover {
-  transform: scale(1.05);
-  background: linear-gradient(90deg, #ff758c, #ff7eb3);
-}
-.commentForm {
+.authorInfo {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 10px;
-  margin-top: 20px;
-  padding: 10px;
-  background: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.commentInput {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 16px;
-  resize: none;
-  transition: border-color 0.3s ease;
-}
-
-.commentInput:focus {
-  border-color: #1e90ff;
-  outline: none;
-  box-shadow: 0 0 5px rgba(30, 144, 255, 0.5);
-}
-
-.commentButton {
-  align-self: flex-end;
-  background: #1e90ff;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background 0.3s ease, transform 0.3s ease;
-}
-
-.commentButton:disabled {
-  background: #ddd;
-  cursor: not-allowed;
-}
-
-.commentButton:hover:not(:disabled) {
-  background: #1c86ee;
-  transform: scale(1.05);
-}
-.comments {
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  background-color: #f9f9f9; /* Arka planı hafif bir gri yapar */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge ekler */
-}
-
-.comment {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px; /* Profil fotoğrafı ve içerik arasında boşluk */
-  margin-bottom: 15px; /* Yorumlar arasında boşluk */
-  padding: 10px;
-  border: 1px solid #e0e0e0; /* Yorum kutusunun kenarlarını belirginleştirir */
-  border-radius: 6px;
-  background-color: #ffffff;
-}
-
-.commentUserImg {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%; /* Fotoğrafı yuvarlak yapar */
+.authorAvatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
   object-fit: cover;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge ekler */
 }
 
-.commentUsername {
-  font-weight: bold;
+.authorDetails {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.authorName {
+  font-weight: 600;
+  font-size: 16px;
   color: #333;
 }
 
-.commentText {
-  margin-top: 4px;
+.postDate {
+  font-size: 14px;
+  color: #888;
+}
+
+.postTags {
+  display: flex;
+  gap: 8px;
+}
+
+.tag {
+  font-size: 14px;
+  color: white;
+  background-color: #f8a14c;
+  padding: 5px 12px;
+  border-radius: 15px;
+}
+
+.postImageWrapper {
+  width: 100%;
+  max-height: 600px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+
+.postImage {
+  width: 600px;
+  height: 400px;
+  border-radius: 30px;
+  padding: 10px;
+  display: block;
+}
+
+.postContent {
+  padding: 15px 20px;
+}
+
+.postText {
+  font-size: 15px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.postInteractions {
+  display: flex;
+  padding: 15px 20px;
+  border-top: 1px solid #f1f1f1;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 30px;
+}
+
+.interaction {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 14px;
   color: #555;
+  cursor: pointer;
+  padding: 5px;
+  transition: transform 0.2s, color 0.2s;
 }
 
-.commentTime {
-  color: #999;
-  margin-top: 4px;
-  align-self: flex-end; /* Tarihi sağ alt köşeye yerleştirir */
+.interaction:hover {
+  transform: scale(1.05);
 }
 
-.comment span {
-  display: block; /* Tüm metinleri satır bazında hizalar */
+.interaction.active {
+  color: #e74c3c;
 }
 
-.comment:last-child {
-  margin-bottom: 0; /* Son yorumun altında ekstra boşluk bırakmaz */
+.interactionCount {
+  font-weight: 500;
 }
 
+.shareButton {
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  margin-left: auto;
+}
+
+.shareButton:hover {
+  transform: scale(1.1);
+}
+
+.createPostArea {
+  background-color: white;
+  border-radius: 20px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.createPostPrompt {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.userCreateAvatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.createPostField {
+  flex: 1;
+  text-align: left;
+  background-color: #f7f7f7;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 20px;
+  font-size: 15px;
+  color: #777;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.createPostField:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-1px);
+}
+
+.createPostButton {
+  align-self: flex-end;
+  background-color: #f8a14c;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(248, 161, 76, 0.2);
+}
+
+.createPostButton:hover {
+  background-color: #f5941d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(248, 161, 76, 0.3);
+}

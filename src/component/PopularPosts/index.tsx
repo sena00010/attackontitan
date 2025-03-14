@@ -1,26 +1,45 @@
-import React from 'react'
-import styles from "./popularPosts.module.css";
+import React from 'react';
+import styles from './popularPosts.module.css';
 
 const PopularPosts = () => {
-  return (
-    <div><div className={styles.container}>
-    <div className={styles.popularPosts}>
-      <h3 className={styles.title}>Popular Posts</h3>
-      <div className={styles.item}>
-        <div className={styles.thumbnail}></div>
-        <div className={styles.details}>Some popular post title</div>
-      </div>
-    </div>
-    <div className={styles.artistSuggestions}>
-      <h3 className={styles.title}>Artist Suggestions</h3>
-      <div className={styles.item}>
-        <div className={styles.thumbnail}></div>
-        <div className={styles.details}>Some artist name</div>
-      </div>
-    </div>
-  </div>
-  </div>
-  )
-}
+  const popularPosts = [
+    {
+      id: 1,
+      image: '/path-to-post-image.jpg',
+      userName: '秋赤音 | 悪魔 | 兎兎姫中'
+    },
+    {
+      id: 2,
+      image: '/path-to-post-image.jpg',
+      userName: 'Kare'
+    }
+  ];
 
-export default PopularPosts
+  return (
+      <div className={styles.container}>
+        {popularPosts.map(post => (
+            <div key={post.id} className={styles.postCard}>
+              <div className={styles.imageContainer}>
+                <img
+                    src={post.image || '/default-post-image.jpg'}
+                    alt={`Popular post by ${post.userName}`}
+                    className={styles.postImage}
+                />
+              </div>
+              <div className={styles.postInfo}>
+                <div className={styles.userAvatar}>
+                  <img
+                      src="/path-to-avatar.jpg"
+                      alt="User avatar"
+                      className={styles.avatarImage}
+                  />
+                </div>
+                <div className={styles.userName}>{post.userName}</div>
+              </div>
+            </div>
+        ))}
+      </div>
+  );
+};
+
+export default PopularPosts;

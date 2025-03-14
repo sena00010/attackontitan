@@ -1,0 +1,81 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.artistCard {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    background-color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.artistCard:hover {
+    background-color: #f9f9f9;
+    transform: translateX(3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.artistInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatarContainer {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.artistDetails {
+    display: flex;
+    flex-direction: column;
+}
+
+.artistName {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 2px 0;
+}
+
+.followerCount {
+    font-size: 11px;
+    color: #888;
+    margin: 0;
+}
+
+.followButton {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: #f8a14c;
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(248, 161, 76, 0.2);
+}
+
+.followButton:hover {
+    background-color: #f5941d;
+    transform: scale(1.08);
+    box-shadow: 0 4px 8px rgba(248, 161, 76, 0.3);
+}

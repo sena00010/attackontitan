@@ -7,6 +7,7 @@ import {
   faTrashCan,
   faHeart,
   faComment,
+  faShare,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   collection,
@@ -19,10 +20,9 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { app } from "@/app/layout";
-import ForumTopSide from "../ForumTopSide";
 import PostCreated from "@/component/createPost";
-import UpdatedPost from "../UpdatedPost";
-import DeletePost from "../deletePost";
+import UpdatedPost from "@/component/UpdatedPost";
+import DeletePost from "@/component/deletePost";
 import { getAuth } from "firebase/auth";
 
 export default function ForumDataFetch() {
@@ -35,10 +35,9 @@ export default function ForumDataFetch() {
   const [selectedPost, setSelectedPost] = useState<any>(null);
   const [likedPosts, setLikedPosts] = useState<boolean>(false);
   const [commentText, setCommentText] = useState("");
-  const [showComments, setShowComments] = useState<{ [key: string]: boolean }>(
-    {}
-  );
+  const [showComments, setShowComments] = useState<{ [key: string]: boolean }>({});
   const [showCommentForm, setShowCommentForm] = useState<{ [key: string]: boolean }>({});
+
   // Kullanıcı verilerini getir ve bir nesnede sakla
   const fetchUsers = async () => {
     try {
@@ -53,7 +52,6 @@ export default function ForumDataFetch() {
       console.error("Error fetching users:", error);
     }
   };
-
 
   const fetchComments = async (postId: string) => {
     try {
@@ -76,20 +74,18 @@ export default function ForumDataFetch() {
       const postsCol = collection(db, "post");
       const postSnapshot = await getDocs(postsCol);
       const postList = await Promise.all(
-        postSnapshot.docs.map(async (doc) => {
-          await fetchComments(doc.id);
-          return {
-            id: doc.id,
-            ...doc.data(),
-          };
-        })
+          postSnapshot.docs.map(async (doc) => {
+            await fetchComments(doc.id);
+            return {
+              id: doc.id,
+              ...doc.data(),
+            };
+          })
       );
       setPosts(postList);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
-
-
   };
 
   useEffect(() => {
@@ -138,6 +134,7 @@ export default function ForumDataFetch() {
       });
 
       fetchComments(postId); // Yorumları tekrar çek
+      setCommentText("");
       console.log("Yorum başarıyla eklendi!");
     } catch (error) {
       console.error("Yorum eklenirken bir hata oluştu:", error);
@@ -148,7 +145,7 @@ export default function ForumDataFetch() {
     const now = new Date();
     const postDate = new Date(timestamp);
     const diffHours =
-      Math.abs(now.getTime() - postDate.getTime()) / (1000 * 60 * 60);
+        Math.abs(now.getTime() - postDate.getTime()) / (1000 * 60 * 60);
     if (diffHours < 24) {
       return `${Math.floor(diffHours)} saat önce`;
     }
@@ -164,41 +161,42 @@ export default function ForumDataFetch() {
       const likesCollection = collection(postRef, "likes");
       const querySnapshot = await getDocs(likesCollection);
       const alreadyLiked = querySnapshot.docs.find(
-        (doc) => doc.data().userId === userId
+          (doc) => doc.data().userId === userId
       );
-       console.log(alreadyLiked,'alreadyLiked')
-      if (alreadyLiked) {  
+
+      if (alreadyLiked) {
         await deleteDoc(doc(likesCollection, alreadyLiked.id));
-      }else{
+      } else {
         const timeStamp = new Date().toISOString();
         await addDoc(likesCollection, {
           userId,
           timeStamp,
         });
       }
+
       const postSnap = await getDoc(postRef);
       if (postSnap.exists()) {
         const data = postSnap.data();
-     
+
         const likesCollection2 = collection(postRef, "likes");
         const querySnapshot2 = await getDocs(likesCollection2);
-        const selfReaction= querySnapshot2.docs.some(
-          (doc) => doc.data().userId === userId
+        const selfReaction = querySnapshot2.docs.some(
+            (doc) => doc.data().userId === userId
         );
-        const newLikeCount =selfReaction? (data.likeCount || 0) +1:(data.likeCount || 0) -1;
-      
+        const newLikeCount = selfReaction ? (data.likeCount || 0) + 1 : (data.likeCount || 0) - 1;
+
         await updateDoc(postRef, {
           likeCount: newLikeCount,
-          selfReaction:selfReaction,
+          selfReaction: selfReaction,
         });
       }
-      
-      console.log("Like başarıyla eklendi!");
+
+      setLikedPosts(!likedPosts);
     } catch (error) {
       console.error("Like eklenirken bir hata oluştu:", error);
     }
-    setLikedPosts(!likedPosts)
   };
+
   const handleShowComments = (postId: string) => {
     setShowComments((prev) => ({ ...prev, [postId]: !prev[postId] }));
     if (!showComments[postId]) {
@@ -210,148 +208,168 @@ export default function ForumDataFetch() {
     setShowCommentForm((prev) => ({ ...prev, [postId]: !prev[postId] }));
   };
 
-        return (
-          <div className={styles.main}>
-            <PostCreated opened={openPost} setOpenPost={setOpenPost} />
-            <UpdatedPost
-              selectedPost={selectedPost}
-              data={fetchPosts}
-              open={openUpdate}
-              setOpenUpdate={setOpenUpdate}
-              setPost={setPosts}
+  return (
+      <div className={styles.container}>
+        <PostCreated opened={openPost} setOpenPost={setOpenPost} />
+        <UpdatedPost
+            selectedPost={selectedPost}
+            data={fetchPosts}
+            open={openUpdate}
+            setOpenUpdate={setOpenUpdate}
+            setPost={setPosts}
+        />
+
+        <div className={styles.createPostArea}>
+          <div className={styles.createPostPrompt}>
+            <img
+                src={users[getAuth(app).currentUser?.uid]?.userProfilePictures || "/defaultProfile.png"}
+                alt="User"
+                className={styles.userCreateAvatar}
             />
-            {posts?.map((post) => {
-              const user = users[post.userId] || {}; // Postu paylaşan kullanıcıyı eşleştir
-              return (
-                <div className={styles.post} key={post?.id}>
-                  <div className={styles.userData}>
+            <button
+                onClick={() => setOpenPost(true)}
+                className={styles.createPostField}
+            >
+              Neler paylaşmak istiyorsun?
+            </button>
+          </div>
+          <button
+              onClick={() => setOpenPost(true)}
+              className={styles.createPostButton}
+          >
+            Gönderi Oluştur
+          </button>
+        </div>
+
+        {posts.map((post) => {
+          const user = users[post.userId] || {};
+          return (
+              <div className={styles.postCard} key={post?.id}>
+                <div className={styles.postHeader}>
+                  <div className={styles.authorInfo}>
                     <img
-                      src={user?.userProfilePictures || "/defaultProfile.png"}
-                      alt="User"
+                        src={user?.userProfilePictures || "/defaultProfile.png"}
+                        alt={user?.userName || "Anonim"}
+                        className={styles.authorAvatar}
                     />
-                    <div className="userInfo">
-                      <span className={styles.username}>
-                        {user?.userName || "Anonim"}
-                      </span>
-                      <span className={styles.time}>
-                        {formatDate(post?.createdAt)}
-                      </span>
+                    <div className={styles.authorDetails}>
+                      <div className={styles.authorName}>{user?.userName || "Vinne"}</div>
+                      <div className={styles.postDate}>• Feb 14</div>
                     </div>
                   </div>
-                  <div className={styles.postContent}>
-                    <div>{post?.postContent?.text}</div>
-                    {post?.postContent?.image && (
+
+                  <div className={styles.postTags}>
+                    <span className={styles.tag}>#Vinnearts</span>
+                    <span className={styles.tag}>#Artworks</span>
+                  </div>
+                </div>
+
+                <div className={styles.postImageWrapper}>
+                  {post?.postContent?.image && (
                       <img
-                        width={300}
-                        height={200}
-                        src={post.postContent?.image}
-                        alt="Post"
+                          src={post.postContent?.image}
+                          alt="Post"
+                          className={styles.postImage}
                       />
-                    )}
-                  </div>
-                  <div className={styles.postActions}>
-                    <button
-                      className={`${styles.actionButton} like`}
-                      style={{
-                        color: post.selfReaction ? "red" : "black",
-                      }}
-                      onClick={() => handleLike(post?.id)}
-                    >
-                      <FontAwesomeIcon icon={faHeart} onClick={()=>console.log(post.selfReaction,'post.selfReaction')} />
-                      <span>{post.likeCount}</span>
-                    </button>
-        
-                    <button
-                      className={`${styles.actionButton} comment`}
-                      onClick={() => handleShowCommentForm(post.id)}
-                    >
-                      <FontAwesomeIcon icon={faComment} />
-                      Yorum Yap
-                    </button>
-                   {post.userId===getAuth(app).currentUser?.uid?
-                    <button
-                      className={`${styles.actionButton} edit`}
-                      onClick={() => handleUpdate(post.id)}
-                    >
-                      <FontAwesomeIcon icon={faPenToSquare} />
-                    </button>
-                    :<div></div>}
-                    {post.userId===getAuth(app).currentUser?.uid?
-                    <button
-                      className={`${styles.actionButton} delete`}
-                      onClick={() => handleDelete(post.id)}
-                    >
-                      <FontAwesomeIcon icon={faTrashCan} />
-                    </button>
-                     :<div></div>}
-                  </div>
-                  {showCommentForm[post.id] && (
-                    <div className={styles.commentForm}>
-                      <textarea
-                        placeholder="Yorumunuzu buraya yazın..."
-                        className={styles.commentInput}
-                        onChange={(e) => setCommentText(e.target.value)}
-                        value={commentText}
-                      >
-                      
-                      </textarea>
-                      <button
-                      className={`${styles.actionButton} show-comments`}
-                      onClick={() => handleShowComments(post.id)}
-                    >
-                      {showComments[post.id] ? "Yorumları Gizle" : "Yorumları Göster"}
-                      {showComments[post.id] && (
-                    <div className={styles.comments}>
-                      {comments[post.id]?.map((comment) => {
-                        const commentUser = users[comment.userId] || {};
-                        return (
-                          <div key={comment.id} className={styles.comment}>
-                            <img
-                              src={
-                                commentUser.userProfilePictures ||
-                                "/defaultProfile.png"
-                              }
-                              alt="User"
-                              className={styles.commentUserImg}
-                            />
-                            <span className={styles.commentUsername}>
-                              {commentUser.userName || "Anonim"}
-                            </span>
-                            <span className={styles.commentText}>
-                              {comment.commentText}
-                            </span>
-                            <span className={styles.commentTime}>
-                              {formatDate(comment.createdAt)}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                    </button>
-                      <button
-                        className={styles.commentButton}
-                        onClick={() => handleComment(post.id, commentText)}
-                        disabled={!commentText.trim()}
-                      >
-                        Gönder
-                      </button>
-                    </div>
                   )}
                 </div>
-              );
-            })}
-            <div>
-              <button
-                onClick={() => setOpenPost(true)}
-                className={styles.createPostButton}
-              >
-                Oluştur
-              </button>
-            </div>
-          </div>
-        );
-        
 
-  
+                <div className={styles.postContent}>
+                  {post?.postContent?.text && (
+                      <div className={styles.postText}>
+                        {post.postContent.text.length > 80 ?
+                            (
+                                <>
+                                  <div>USAGI . ZERO TWO . ASUKA Cross mark</div>
+                                  <div>CROSSOVER #2 COMING SOON, tell me 3 characters !</div>
+                                </>
+                            ) :
+                            post.postContent.text
+                        }
+                      </div>
+                  )}
+                </div>
+
+                <div className={styles.postInteractions}>
+                  <button className={`${styles.interaction} ${post.selfReaction ? styles.active : ''}`}
+                          onClick={() => handleLike(post?.id)}>
+                    <FontAwesomeIcon icon={faHeart} />
+                    <span className={styles.interactionCount}>{post.likeCount || "4203k"}</span>
+                  </button>
+
+                  <button className={styles.interaction}
+                          onClick={() => handleShowCommentForm(post.id)}>
+                    <FontAwesomeIcon icon={faComment} />
+                    <span className={styles.interactionCount}>{comments[post.id]?.length || "805"}</span>
+                  </button>
+
+                  <button className={styles.interaction}>
+                    <FontAwesomeIcon icon={faShare} />
+                    <span className={styles.interactionCount}>1k</span>
+                  </button>
+
+                  <button className={styles.shareButton}>
+                    <FontAwesomeIcon icon={faShare} />
+                  </button>
+                </div>
+
+                {showCommentForm[post.id] && (
+                    <div className={styles.commentSection}>
+                      <div className={styles.commentForm}>
+                  <textarea
+                      placeholder="Yorumunuzu buraya yazın..."
+                      className={styles.commentInput}
+                      onChange={(e) => setCommentText(e.target.value)}
+                      value={commentText}
+                  />
+                        <button
+                            className={styles.commentButton}
+                            onClick={() => handleComment(post.id, commentText)}
+                            disabled={!commentText.trim()}
+                        >
+                          Gönder
+                        </button>
+                      </div>
+
+                      <button
+                          className={styles.showCommentsButton}
+                          onClick={() => handleShowComments(post.id)}
+                      >
+                        {showComments[post.id] ? "Yorumları Gizle" : "Yorumları Göster"}
+                      </button>
+
+                      {showComments[post.id] && (
+                          <div className={styles.commentsList}>
+                            {comments[post.id]?.map((comment) => {
+                              const commentUser = users[comment.userId] || {};
+                              return (
+                                  <div key={comment.id} className={styles.commentItem}>
+                                    <img
+                                        src={commentUser.userProfilePictures || "/defaultProfile.png"}
+                                        alt={commentUser.userName || "Anonim"}
+                                        className={styles.commentUserImg}
+                                    />
+                                    <div className={styles.commentContent}>
+                                      <div className={styles.commentUserName}>
+                                        {commentUser.userName || "Anonim"}
+                                      </div>
+                                      <div className={styles.commentText}>
+                                        {comment.commentText}
+                                      </div>
+                                      <div className={styles.commentTime}>
+                                        {formatDate(comment.createdAt)}
+                                      </div>
+                                    </div>
+                                  </div>
+                              );
+                            })}
+                          </div>
+                      )}
+                    </div>
+                )}
+              </div>
+          );
+        })}
+      </div>
+  );
 }
