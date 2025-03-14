@@ -2,6 +2,9 @@ import {
   faImage,
   faPaperPlane,
   faXmark,
+  faHeart,
+  faStar,
+  faMagic
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { initializeApp } from "firebase/app";
@@ -27,7 +30,7 @@ export default function PostCreated({ opened, setOpenPost }: PostCreatedProps) {
     apiKey: "AIzaSyBrCP4cdAO3iugcXw_3tC-P7Tc6ejaHcn4",
     authDomain: "animepression.firebaseapp.com",
     databaseURL:
-      "https://animepression-default-rtdb.europe-west1.firebasedatabase.app",
+        "https://animepression-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "animepression",
     storageBucket: "animepression.appspot.com",
     messagingSenderId: "443513559646",
@@ -74,8 +77,8 @@ export default function PostCreated({ opened, setOpenPost }: PostCreatedProps) {
       // If there's an image file, upload it to Firebase Storage
       if (imageFile) {
         const storageRef = ref(
-          storage,
-          `post-images/${userId}/${Date.now()}_${imageFile.name}`
+            storage,
+            `post-images/${userId}/${Date.now()}_${imageFile.name}`
         );
         await uploadBytes(storageRef, imageFile);
         imageUrl = await getDownloadURL(storageRef);
@@ -104,73 +107,75 @@ export default function PostCreated({ opened, setOpenPost }: PostCreatedProps) {
     }
   };
 
+
   return opened ? (
-    <div className={styles.overlay}>
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <h2 className={styles.title}>Yeni Gönderi Oluştur</h2>
-          <FontAwesomeIcon
-            icon={faXmark}
-            onClick={() => setOpenPost(false)}
-            className={styles.closeIcon}
-          />
-        </div>
+      <div className={styles.overlay}>
+        <div className={styles.container}>
+          <div className={styles.header}>
+            <h2 className={styles.title}>Yeni Gönderi Oluştur</h2>
+            <FontAwesomeIcon
+                icon={faXmark}
+                onClick={() => setOpenPost(false)}
+                className={styles.closeIcon}
+            />
+          </div>
 
-        <form className={styles.form} onSubmit={handleSubmit}>
+          <form className={styles.form} onSubmit={handleSubmit}>
           <textarea
-            className={styles.textAreaInput}
-            placeholder="Ne paylaşmak istersiniz?"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            rows={4}
+              className={styles.textAreaInput}
+              placeholder="Anime dünyasında bugün ne paylaşmak istersiniz? 🌟"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              rows={4}
           />
 
-          {previewUrl ? (
-            <div className={styles.imagePreviewContainer}>
-              <img
-                src={previewUrl}
-                alt="Preview"
-                className={styles.imagePreview}
-              />
-              <button
-                type="button"
-                className={styles.removeImageBtn}
-                onClick={removeImage}
-              >
-                <FontAwesomeIcon icon={faXmark} />
-              </button>
-            </div>
-          ) : (
-            <div className={styles.uploadContainer} onClick={handleImageClick}>
-              <FontAwesomeIcon icon={faImage} className={styles.uploadIcon} />
-              <p>Resim eklemek için tıklayın</p>
-            </div>
-          )}
-
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleImageChange}
-            accept="image/*"
-            className={styles.hiddenInput}
-          />
-
-          <button
-            className={styles.submitButton}
-            type="submit"
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <span className={styles.loadingSpinner}></span>
+            {previewUrl ? (
+                <div className={styles.imagePreviewContainer}>
+                  <img
+                      src={previewUrl}
+                      alt="Preview"
+                      className={styles.imagePreview}
+                  />
+                  <button
+                      type="button"
+                      className={styles.removeImageBtn}
+                      onClick={removeImage}
+                  >
+                    <FontAwesomeIcon icon={faXmark} />
+                  </button>
+                </div>
             ) : (
-              <>
-                <span>Gönder</span>
-                <FontAwesomeIcon icon={faPaperPlane} />
-              </>
+                <div className={styles.uploadContainer} onClick={handleImageClick}>
+                  <FontAwesomeIcon icon={faImage} className={styles.uploadIcon} />
+                  <p>Bir resim eklemek için tıklayın 🎨</p>
+                </div>
             )}
-          </button>
-        </form>
+
+            <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+                accept="image/*"
+                className={styles.hiddenInput}
+            />
+
+            <button
+                className={styles.submitButton}
+                type="submit"
+                disabled={isLoading}
+            >
+              {isLoading ? (
+                  <span className={styles.loadingSpinner}></span>
+              ) : (
+                  <>
+                    <span>Gönder</span>
+                    <FontAwesomeIcon icon={faPaperPlane} />
+                    <FontAwesomeIcon icon={faMagic} style={{ marginLeft: '2px' }} />
+                  </>
+              )}
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
   ) : null;
 }

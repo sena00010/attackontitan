@@ -1,25 +1,32 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
   padding: 0 15px;
+  background-color: #fff9e6; /* Match site's cream background */
 }
 
 .postCard {
   background-color: white;
-  border-radius: 20px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 16px;
   border: 1px solid rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.postCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .postHeader {
-  padding: 15px 20px;
+  padding: 12px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f8f8f8; /* Light background for header */
+  background-color: white;
 }
 
 .authorInfo {
@@ -29,84 +36,87 @@
 }
 
 .authorAvatar {
-  width: 45px;
-  height: 45px;
-  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   object-fit: cover;
 }
 
 .authorDetails {
   display: flex;
   align-items: center;
-  gap: 5px;
 }
 
 .authorName {
   font-weight: 600;
-  font-size: 16px;
+  font-size: 15px;
   color: #333;
-  margin-right: 10px; /* Add margin to separate name and date */
 }
 
 .postDate {
-  font-size: 14px;
+  font-size: 13px;
   color: #888;
-  margin-left: 10px; /* Add margin to separate name and date */
+  margin-left: 5px;
 }
 
 .postTags {
   display: flex;
-  gap: 8px;
-  margin-left: auto; /* Push tags to the right */
+  gap: 6px;
+  margin-left: auto;
 }
 
 .tag {
-  font-size: 14px;
+  font-size: 13px;
   color: white;
   background-color: #f8a14c;
-  padding: 5px 12px;
-  border-radius: 15px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.tag:hover {
+  background-color: #f5941d;
 }
 
 .postImageWrapper {
   width: 100%;
-  max-height: 600px;
+  max-height: 500px;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0;
   margin: 0;
+  background-color: #f8f8f8;
 }
 
 .postImage {
-  width: 100%; /* Make image responsive */
-  height: auto; /* Maintain aspect ratio */
-  border-radius: 0; /* Remove border radius */
-  padding: 0; /* Remove padding */
+  width: 100%;
+  height: auto;
+  object-fit: contain;
   display: block;
 }
 
 .postContent {
-  padding: 15px 20px;
-  background-color: #fff; /* White background for content */
+  padding: 12px 16px;
+  background-color: #fff;
 }
 
 .postText {
-  font-size: 15px;
+  font-size: 14px;
   color: #333;
   line-height: 1.5;
-  white-space: pre-wrap; /* Preserve whitespace and line breaks */
+  white-space: pre-wrap;
 }
 
 .postInteractions {
   display: flex;
-  padding: 15px 20px;
-  border-top: 1px solid #f1f1f1;
+  padding: 10px 16px;
+  border-top: 1px solid #f8a14c6b;
   justify-content: flex-start;
   align-items: center;
-  gap: 30px;
-  background-color: #f8f8f8; /* Light background for interactions */
+  gap: 24px;
+  background-color: white;
 }
 
 .interaction {
@@ -114,62 +124,63 @@
   border: none;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
+  gap: 6px;
+  font-size: 13px;
   color: #555;
   cursor: pointer;
   padding: 5px;
-  transition: transform 0.2s, color 0.2s;
+  transition: color 0.2s;
 }
 
 .interaction:hover {
-  transform: scale(1.05);
+  color: #f8a14c;
 }
 
 .interaction.active {
-  color: #e74c3c;
+  color: #f8a14c;
 }
 
 .interactionCount {
   font-weight: 500;
+  font-size: 13px;
 }
 
 .shareButton {
   background: none;
   border: none;
   color: #555;
-  font-size: 16px;
+  font-size: 15px;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: color 0.2s;
   margin-left: auto;
 }
 
 .shareButton:hover {
-  transform: scale(1.1);
+  color: #f8a14c;
 }
 
 .createPostArea {
   background-color: white;
-  border-radius: 20px;
-  padding: 15px 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
   border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 .createPostPrompt {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
 .userCreateAvatar {
-  width: 45px;
-  height: 45px;
-  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   object-fit: cover;
 }
 
@@ -178,18 +189,17 @@
   text-align: left;
   background-color: #f7f7f7;
   border: none;
-  border-radius: 25px;
-  padding: 12px 20px;
-  font-size: 15px;
+  border-radius: 20px;
+  padding: 10px 16px;
+  font-size: 14px;
   color: #777;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s ease;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .createPostField:hover {
   background-color: #f0f0f0;
-  transform: translateY(-1px);
 }
 
 .createPostButton {
@@ -197,9 +207,9 @@
   background-color: #f8a14c;
   color: white;
   border: none;
-  border-radius: 20px;
-  padding: 10px 20px;
-  font-size: 14px;
+  border-radius: 18px;
+  padding: 8px 16px;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.2s ease;
@@ -208,6 +218,29 @@
 
 .createPostButton:hover {
   background-color: #f5941d;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(248, 161, 76, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(248, 161, 76, 0.3);
+}
+
+.commentSection {
+  background-color: #fff9e6; /* Cream background matching the site */
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 0;
+}
+
+/* Animation for interactions */
+@keyframes heartPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.interaction:active svg {
+  animation: heartPulse 0.3s ease-in-out;
 }

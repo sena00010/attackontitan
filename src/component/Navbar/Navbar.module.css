@@ -88,10 +88,10 @@
 }
 
 .profileImage {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    object-fit: contain;
+    width: 55px;
+    height: 55px;
+    border-radius: 10px;
+    object-fit: cover;
 }
 
 .fallbackAvatar {
