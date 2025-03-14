@@ -4,70 +4,228 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 999;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(8px); /* Added background blur */
 }
 
 .container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  width: 650px;  /* Increased from 450px */
+  max-width: 95%; /* Increased from 90% */
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: hidden;
+  border: 2px solid rgba(106, 17, 203, 0.3);
+  position: relative; /* Added to ensure proper positioning of pseudo-element */
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 0.5s ease-in-out;
+  padding: 18px 25px 18px 25px; /* Adjusted padding for larger header */
+  border-bottom: 1px solid #f0f0f0;
+  background: linear-gradient(135deg, #fafafa, #f3f3f3);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem; /* Increased from 1.3rem */
+  color: #6a11cb;
+  font-weight: 600;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.closeIcon {
+  cursor: pointer;
+  font-size: 1.4rem; /* Increased from 1.2rem */
+  color: #6a11cb;
+  transition: transform 0.2s, color 0.2s;
+  padding: 5px;
+}
+
+.closeIcon:hover {
+  transform: scale(1.1);
+  color: #4a0c8e;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  width: 330px;
+  gap: 25px; /* Increased from 20px */
+  padding: 25px 30px 25px 30px; /* Adjusted padding */
+  width: 100%;
+ 
 }
 
 .textAreaInput {
-  padding: 10px;
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
+  padding: 15px;
+  width: 85%;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  background-color: #fafafa;
+  resize: none;
+  padding-right: 20px; /* Added padding on the right */
+
 }
 
 .textAreaInput:focus {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  outline: none;
+  border-color: #6a11cb;
+  box-shadow: 0 3px 12px rgba(106, 17, 203, 0.15);
+  background-color: white;
+}
+
+.uploadContainer {
+  display: flex;
+  flex-direction: column;
+  width: 83%;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #d0d0d0;
+  border-radius: 10px;
+  padding: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+  color: #707070;
+}
+
+.uploadContainer:hover {
+  border-color: #6a11cb;
+  background-color: #f5f0ff;
+}
+
+.uploadIcon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #6a11cb;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.imagePreviewContainer {
+  position: relative;
+  width: 90%;
+  max-height: 350px; /* Increased from 250px to show larger previews */
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.imagePreview {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.removeImageBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #6a11cb;
+  transition: all 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.removeImageBtn:hover {
+  background-color: white;
+  transform: scale(1.1);
 }
 
 .submitButton {
-  padding: 10px 20px;
+  padding: 12px 20px;
   background: linear-gradient(45deg, #6a11cb, #2575fc);
   border: none;
-  border-radius: 5px;
+  border-radius: 50px;
   color: white;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: transform 0.3s, box-shadow 0.3s;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  align-self: center;
+  min-width: 120px;
+  box-shadow: 0 4px 10px rgba(106, 17, 203, 0.3);
 }
 
 .submitButton:hover {
-  background: linear-gradient(45deg, #2575fc, #6a11cb);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(106, 17, 203, 0.4);
 }
 
-@keyframes fadeIn {
-  from {
+.submitButton:disabled {
+  background: linear-gradient(45deg, #b69dd3, #7a9fdb);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loadingSpinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes popIn {
+  0% {
     opacity: 0;
-    transform: scale(0.9);
+    transform: scale(0.8);
   }
-  to {
+  100% {
     opacity: 1;
     transform: scale(1);
   }
+}
+
+/* Anime-themed decorative elements */
+.container::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  bottom: -5px;
+  left: -5px;
+  background: linear-gradient(135deg, #6a11cb33, #2575fc33, #ff69b433, #6a11cb33);
+  z-index: -1;
+  border-radius: 17px;
+  filter: blur(8px);
+  opacity: 0.7;
+  animation: gradientShift 8s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }

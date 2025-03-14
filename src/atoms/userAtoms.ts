@@ -1,6 +1,6 @@
 import { atom } from 'jotai';
 
-interface User {
+export interface User {
   id: string;
   userName: string;
   userLastName: string;
@@ -15,17 +15,4 @@ interface User {
   userProfilePictures: string;
 }
 
-export const userAtom = atom<User>({
-  id: '',
-  userName: '',
-  userLastName: '',
-  userNickname: '',
-  email: '',
-  phone: '',
-  birthday: '',
-  favoriteAnimes: '',
-  favoriteMangas: '',
-  userHobbies: '',
-  userInfo: '',
-  userProfilePictures: '',
-});
+export const userAtom = atom<User | null>(null);

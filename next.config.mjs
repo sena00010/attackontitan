@@ -19,6 +19,11 @@ const nextConfig = {
             },
             {
                 protocol: 'https',
+                hostname:  "cdn.sortiraparis.com",
+                port: '',
+            },
+            {
+                protocol: 'https',
                 hostname:  "firebasestorage.googleapis.com",
                 port: '',
             },

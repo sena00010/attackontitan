@@ -13,6 +13,7 @@
     transition: all 0.2s ease;
     background-color: white;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    position: relative;
 }
 
 .artistCard:hover {
@@ -57,6 +58,17 @@
     font-size: 11px;
     color: #888;
     margin: 0;
+}
+
+.postCount {
+    font-size: 11px;
+    color: #888;
+    margin: 0;
+    display: none;
+}
+
+.artistCard:hover .postCount {
+    display: block;
 }
 
 .followButton {

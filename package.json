@@ -13,6 +13,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@huggingface/inference": "^3.3.6",
     "@mantine/carousel": "^7.8.0",
     "@mantine/charts": "^7.8.0",
     "@mantine/code-highlight": "^7.8.0",
