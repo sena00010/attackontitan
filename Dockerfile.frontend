@@ -1,0 +1,16 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY . .
+
+# Eğer Firebase kullanıyorsa, .env.local dosyasının Docker içinde olması gerekebilir
+# ENV için gerekli değişkenleri burada tanımlayabilirsiniz
+# ENV NEXT_PUBLIC_FIREBASE_API_KEY=xxx
+
+RUN npm install
+RUN npm run build
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
