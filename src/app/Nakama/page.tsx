@@ -19,7 +19,6 @@ export default function ForumPage() {
             views: 568,
             lastUpdate: "15 dk önce"
         },
-        // Diğer konular buraya...
     ];
 
     return (
