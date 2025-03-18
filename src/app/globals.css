@@ -4,4 +4,23 @@ body, html {
     overflow-x: hidden; /* Yatay kaydırma çubuğunu kaldır */
     overflow-y: auto; /* Dikey kaydırma için normal davranış */
   }
-  
+/* Ana CSS'e ekleyin */
+@keyframes floatAnimation {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes pulseAnimation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.floatingElement {
+    animation: floatAnimation 3s ease-in-out infinite;
+}
+
+.pulseElement {
+    animation: pulseAnimation a2s ease-in-out infinite;
+}

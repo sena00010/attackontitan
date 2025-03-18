@@ -57,6 +57,12 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+    <head>
+      <link
+          href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=M+PLUS+Rounded+1c:wght@300;400;500;700&display=swap"
+          rel="stylesheet"
+      />
+    </head>
       <body className={inter.className}>
         <MantineProvider withCssVariables withGlobalClasses withStaticClasses>
           {isAuthPage ? (

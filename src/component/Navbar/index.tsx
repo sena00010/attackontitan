@@ -111,10 +111,10 @@ const Navbar = () => {
             Feeds
           </a>
           <a
-            href="/collection"
-            className={`${styles.navLink} ${pathname === "/collection" ? styles.active : ""}`}
+            href="/Nakama"
+            className={`${styles.navLink} ${pathname === "/Nakama" ? styles.active : ""}`}
           >
-            Collection
+            Nakama
           </a>
           <a
             href="/createYourCharacter"

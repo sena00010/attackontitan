@@ -1,0 +1,444 @@
+.container {
+    padding: 20px;
+    background-color: #FFF8F5;
+    border-radius: 20px;
+    box-shadow: 0 6px 16px rgba(255, 112, 147, 0.08);
+}
+
+.topBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.backButton {
+    background: none;
+    border: none;
+    color: #FF7093;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s;
+}
+
+.backButton:hover {
+    transform: translateX(-3px);
+}
+
+.categoryBadge {
+    background: linear-gradient(to right, #FF7093, #A666FF);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(255, 112, 147, 0.2);
+}
+
+.postContent {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(255, 112, 147, 0.1);
+    border: 2px solid #FFE6EC;
+}
+
+.postHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.authorInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.authorAvatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.authorName {
+    font-weight: 600;
+    color: #333;
+}
+
+.postMeta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.locationText {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.locationIcon {
+    color: #FF7093;
+}
+
+.postRating {
+    color: gold;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+}
+
+.ratingNumber {
+    margin-left: 5px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.postTitle {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    line-height: 1.3;
+}
+
+.imageGallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 200px);
+    gap: 10px;
+    margin-bottom: 25px;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.galleryImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+
+.galleryImage:hover {
+    transform: scale(1.05);
+}
+
+.postBody {
+    line-height: 1.7;
+    color: #444;
+    font-size: 1rem;
+    margin-bottom: 30px;
+}
+
+.paragraph {
+    margin-bottom: 15px;
+}
+
+.detailCards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.detailCard {
+    background: #FFFAF7;
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid #FFE6EC;
+}
+
+.detailTitle {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    color: #FF7093;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.recommendedList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.recommendedList li {
+    padding: 5px 0;
+    position: relative;
+    padding-left: 20px;
+}
+
+.recommendedList li::before {
+    content: '🍴';
+    position: absolute;
+    left: 0;
+    top: 5px;
+}
+
+.interactionButtons {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 15px;
+    border-top: 1px solid #FFE6EC;
+}
+
+.likeButton, .commentButton, .shareButton {
+    background: none;
+    border: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    border-radius: 20px;
+    transition: background 0.2s;
+}
+
+.likeButton {
+    color: #FF7093;
+}
+
+.likeButton:hover {
+    background: #FFE6EC;
+}
+
+.commentButton {
+    color: #A666FF;
+}
+
+.commentButton:hover {
+    background: #F2E6FF;
+}
+
+.shareButton {
+    color: #66BCFF;
+}
+
+.shareButton:hover {
+    background: #E6F5FF;
+}
+
+.commentsSection {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(255, 112, 147, 0.1);
+    border: 2px solid #FFE6EC;
+}
+
+.commentsTitle {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    color: #FF7093;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    position: relative;
+    padding-bottom: 8px;
+    border-bottom: 2px dashed #FFE6EC;
+}
+
+.commentsTitle::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 80px;
+    height: 2px;
+    background: #FF7093;
+}
+
+.commentsList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.commentCard {
+    background: #FFFAF7;
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid #FFE6EC;
+}
+
+.commentHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.commentAuthor {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.commentAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.commentAuthorName {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.commentDate {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.commentBody {
+    line-height: 1.5;
+    color: #444;
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+}
+
+.commentActions {
+    display: flex;
+    gap: 15px;
+}
+
+.commentLikeButton, .commentReplyButton {
+    background: none;
+    border: none;
+    font-size: 0.8rem;
+    color: #666;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.commentLikeButton:hover {
+    color: #FF7093;
+}
+
+.commentReplyButton:hover {
+    color: #A666FF;
+}
+
+.commentForm {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.userAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.commentInputArea {
+    flex: 1;
+}
+
+.replyTitle {
+    margin-bottom: 10px;
+    color: #444;
+    font-size: 1rem;
+}
+
+.commentTextarea {
+    width: 100%;
+    min-height: 120px;
+    border: 2px solid #FFE6EC;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.commentTextarea:focus {
+    outline: none;
+    border-color: #FF7093;
+    box-shadow: 0 0 0 3px rgba(255, 112, 147, 0.1);
+}
+
+.submitButton {
+    background: linear-gradient(to right, #FF7093, #FF9EAA);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    float: right;
+    box-shadow: 0 4px 12px rgba(255, 112, 147, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.submitButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 112, 147, 0.4);
+}
+
+.submitButton:disabled {
+    background: #f0f0f0;
+    color: #999;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.similarPlaces {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(255, 112, 147, 0.1);
+    border: 2px solid #FFE6EC;
+}
+
+.similarTitle {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    color: #FF7093;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+}
+
+.similarList {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.similarCard {
+    background: #FFFAF7;
+    border-radius: 12px;
+    padding: 15px;
+    border: 1px solid #FFE6EC;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.similarCard:hover {
+    transform: translateY(-5px);
+}
+
+.similarIcon {
+    font-size: 2rem;
+}
+
+.similarName {
+    font-weight: 600;
+    color: #333;
+}

@@ -1,0 +1,156 @@
+.container {
+    padding: 20px;
+    background-color: #FFF8F5;
+    border-radius: 20px;
+    box-shadow: 0 6px 16px rgba(255, 112, 147, 0.08);
+}
+
+.header {
+    margin-bottom: 20px;
+}
+
+.title {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    color: #FF7093;
+    text-shadow: 2px 2px 4px rgba(255, 112, 147, 0.15);
+    margin-bottom: 15px;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.searchInput {
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: 1px solid #FFD6E0;
+    width: 300px;
+}
+
+.newTopicButton {
+    background: linear-gradient(to right, #FF7093, #FF9EAA);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(255, 112, 147, 0.4);
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    border-bottom: 2px solid #FFE6EC;
+    padding-bottom: 10px;
+}
+
+.tab {
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 12px 12px 0 0;
+    cursor: pointer;
+    font-weight: 600;
+    position: relative;
+}
+
+.activeTab {
+    background: #FFE6EC;
+    color: #FF7093;
+}
+
+.activeTab::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #FF7093;
+}
+
+.badge {
+    background: #FF7093;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.7rem;
+    margin-left: 5px;
+}
+
+.topicsContainer {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.topicHeader {
+    display: grid;
+    grid-template-columns: 7fr 1fr 1fr 3fr;
+    padding: 10px;
+    background: #f8f8f8;
+    font-weight: bold;
+    color: #FF7093;
+    border-bottom: 2px dashed #FFD6E0;
+}
+
+.topicItem {
+    display: grid;
+    grid-template-columns: 7fr 1fr 1fr 3fr;
+    padding: 15px;
+    border-bottom: 1px solid #FFE6EC;
+    transition: transform 0.2s, box-shadow 0.2s;
+    align-items: center;
+}
+
+.topicItem:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(255, 112, 147, 0.15);
+    cursor: pointer;
+}
+
+.topicInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.topicMeta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.tag {
+    background: #FF7093;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+}
+
+.topicStats {
+    display: contents;
+}
+
+.replyCount, .viewCount {
+    text-align: center;
+    font-weight: 600;
+}
+
+.lastUpdate {
+    text-align: right;
+    color: #888;
+    font-size: 0.9rem;
+}
