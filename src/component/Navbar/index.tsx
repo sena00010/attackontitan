@@ -117,6 +117,12 @@ const Navbar = () => {
             Nakama
           </a>
           <a
+            href="/Otaku-Diary"
+            className={`${styles.navLink} ${pathname === "/Otaku-Diary" ? styles.active : ""}`}
+          >
+            Otaku-Diary
+          </a>
+          <a
             href="/createYourCharacter"
             className={`${styles.navLink} ${pathname === "/createYourCharacter" ? styles.active : ""}`}
           >
